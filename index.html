@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azure Atelier — Luxury Fashion House</title>
+<style>
+/* ============ AZURE ATELIER — DESIGN TOKENS ============ */
+:root{
+  --azure:#8FD3FF;
+  --azure-deep:#5FB8EC;
+  --azure-ink:#0E2A3D;
+  --white:#FFFFFF;
+  --silver:#E7ECEF;
+  --soft-gray:#9AA5AC;
+  --black:#0B0D0F;
+  --bg:#FAFCFE;
+  --surface:#FFFFFF;
+  --text:#11161A;
+  --text-soft:#5B6670;
+  --line:rgba(14,42,61,0.10);
+  --glass:rgba(255,255,255,0.55);
+  --glass-border:rgba(255,255,255,0.65);
+  --shadow-sm:0 2px 10px rgba(14,42,61,0.06);
+  --shadow-md:0 10px 30px rgba(14,42,61,0.10);
+  --shadow-lg:0 24px 60px rgba(14,42,61,0.16);
+  --r-sm:10px;
+  --r-md:18px;
+  --r-lg:28px;
+  --accent:var(--azure);
+  --ff-display:'Azure Display', Georgia, 'Times New Roman', serif;
+  --ff-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  --ff-mono:'SF Mono',Menlo,Consolas,monospace;
+}
+[data-theme="dark"]{
+  --bg:#0A0D10;
+  --surface:#12161A;
+  --text:#F2F5F7;
+  --text-soft:#9DA8AF;
+  --line:rgba(255,255,255,0.08);
+  --glass:rgba(20,24,28,0.55);
+  --glass-border:rgba(255,255,255,0.08);
+  --silver:#1C2126;
+  --shadow-sm:0 2px 10px rgba(0,0,0,0.4);
+  --shadow-md:0 10px 30px rgba(0,0,0,0.5);
+  --shadow-lg:0 24px 60px rgba(0,0,0,0.6);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--ff-body);
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:background .4s ease,color .4s ease;
+  letter-spacing:.01em;
+}
+img,svg{display:block;max-width:100%;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit;}
+ul{list-style:none;}
+input,select,textarea{font-family:inherit;color:inherit;}
+::selection{background:var(--azure);color:var(--azure-ink);}
+::-webkit-scrollbar{width:9px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--soft-gray);border-radius:10px;}
+
+h1,h2,h3,h4{font-family:var(--ff-display);font-weight:600;letter-spacing:-.01em;line-height:1.1;}
+.eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--azure-deep);font-weight:700;}
+.lead{color:var(--text-soft);line-height:1.65;font-size:1.02rem;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
+}
+/* ============ LAYOUT SHELL ============ */
+#app{min-height:100vh;opacity:1;transition:opacity .28s ease, transform .28s ease;}
+#app.fade-out{opacity:0;transform:translateY(8px);}
+#app.fade-in{opacity:1;transform:translateY(0);}
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px;}
+@media (max-width:720px){.wrap{padding:0 18px;}}
+
+/* ---- Header ---- */
+.site-header{
+  position:sticky;top:0;z-index:500;
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  background:var(--glass);
+  border-bottom:1px solid var(--glass-border);
+  transition:background .4s ease,border-color .4s ease;
+}
+.header-inner{max-width:1280px;margin:0 auto;padding:0 32px;height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--ff-display);font-size:1.32rem;font-weight:700;letter-spacing:.02em;}
+.logo .mark{width:34px;height:34px;border-radius:50%;background:conic-gradient(from 140deg,var(--azure),var(--azure-deep),var(--silver),var(--azure));display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);position:relative;}
+.logo .mark::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--surface);}
+.logo .mark::before{content:"A";position:absolute;font-size:.78rem;font-weight:800;color:var(--azure-deep);z-index:1;}
+.nav-main{display:flex;gap:28px;align-items:center;}
+.nav-main a{font-size:.86rem;font-weight:600;letter-spacing:.02em;color:var(--text-soft);position:relative;padding:6px 0;transition:color .25s;}
+.nav-main a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--azure-deep);transition:width .25s ease;}
+.nav-main a:hover,.nav-main a.active{color:var(--text);}
+.nav-main a:hover::after,.nav-main a.active::after{width:100%;}
+.header-actions{display:flex;align-items:center;gap:14px;}
+.icon-btn{position:relative;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(143,211,255,0.14);transition:transform .2s,background .2s;font-size:1.05rem;}
+.icon-btn:hover{transform:translateY(-2px);background:rgba(143,211,255,0.28);}
+.icon-btn .badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--azure-ink);color:#fff;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.hamburger{display:none;width:40px;height:40px;border-radius:50%;align-items:center;justify-content:center;background:rgba(143,211,255,0.14);}
+@media (max-width:920px){
+  .nav-main{display:none;}
+  .hamburger{display:flex;}
+}
+
+/* ---- Sidebar (mobile) ---- */
+.sidebar-overlay{position:fixed;inset:0;background:rgba(11,13,15,0.45);z-index:900;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.sidebar-overlay.open{opacity:1;pointer-events:all;}
+.sidebar{position:fixed;top:0;right:0;height:100%;width:300px;max-width:84vw;background:var(--surface);z-index:901;transform:translateX(100%);transition:transform .38s cubic-bezier(.22,1,.36,1);padding:28px 24px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;gap:6px;}
+.sidebar.open{transform:translateX(0);}
+.sidebar a{padding:14px 8px;font-weight:600;border-radius:10px;font-size:.98rem;color:var(--text);}
+.sidebar a:hover{background:var(--silver);}
+.sidebar .sb-close{align-self:flex-end;width:36px;height:36px;border-radius:50%;background:var(--silver);display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+
+/* ---- Footer ---- */
+.site-footer{background:var(--azure-ink);color:#EAF6FF;margin-top:80px;padding:64px 0 28px;position:relative;overflow:hidden;}
+.site-footer::before{content:"";position:absolute;top:-120px;right:-80px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(143,211,255,.25),transparent 70%);}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr;gap:36px;position:relative;z-index:1;}
+.footer-grid h4{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#9FD9FF;margin-bottom:16px;}
+.footer-grid li{margin-bottom:10px;font-size:.88rem;color:#CFE8FB;}
+.footer-grid li a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:48px;padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.78rem;color:#8FB7CC;position:relative;z-index:1;}
+.newsletter-row{display:flex;gap:10px;margin-top:14px;}
+.newsletter-row input{flex:1;padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:.85rem;}
+.newsletter-row input::placeholder{color:#9FD9FF;}
+.social-row{display:flex;gap:10px;margin-top:16px;}
+.social-row a{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
+.social-row a:hover{transform:translateY(-3px);background:var(--azure);color:var(--azure-ink);}
+@media (max-width:880px){.footer-grid{grid-template-columns:1fr 1fr;}}
+/* ============ COMPONENTS ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 26px;border-radius:100px;font-size:.86rem;font-weight:700;letter-spacing:.02em;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;white-space:nowrap;}
+.btn:active{transform:scale(.96);}
+.btn-primary{background:linear-gradient(135deg,var(--azure),var(--azure-deep));color:var(--azure-ink);box-shadow:0 8px 22px rgba(95,184,236,.35);}
+.btn-primary:hover{box-shadow:0 12px 28px rgba(95,184,236,.5);transform:translateY(-2px);}
+.btn-dark{background:var(--azure-ink);color:#fff;}
+.btn-dark:hover{background:#163750;transform:translateY(-2px);}
+.btn-outline{background:transparent;border:1.5px solid var(--line);color:var(--text);}
+.btn-outline:hover{border-color:var(--azure-deep);background:rgba(143,211,255,.08);}
+.btn-ghost{background:var(--silver);color:var(--text);}
+.btn-ghost:hover{background:var(--azure);color:var(--azure-ink);}
+.btn-sm{padding:9px 18px;font-size:.76rem;}
+.btn-block{width:100%;}
+.btn[disabled]{opacity:.45;cursor:not-allowed;}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);animation:rippleAnim .6s ease-out;pointer-events:none;}
+@keyframes rippleAnim{to{transform:scale(2.6);opacity:0;}}
+
+.glass{background:var(--glass);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border:1px solid var(--glass-border);}
+.card{background:var(--surface);border-radius:var(--r-md);border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease;}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow-md);}
+.section{padding:88px 0;}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:38px;gap:20px;flex-wrap:wrap;}
+.section-head h2{font-size:clamp(1.7rem,3vw,2.4rem);}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;background:rgba(143,211,255,.15);color:var(--azure-deep);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.divider{height:1px;background:var(--line);width:100%;margin:32px 0;}
+
+/* product placeholder image (pure CSS/SVG, no external assets) */
+.ph-img{position:relative;border-radius:inherit;overflow:hidden;background:linear-gradient(135deg,var(--silver),#fff 60%);display:flex;align-items:center;justify-content:center;}
+.ph-img svg{width:46%;height:46%;opacity:.55;}
+.ph-img::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(143,211,255,.18),transparent 55%);}
+
+/* toast */
+#toast-stack{position:fixed;bottom:26px;right:26px;display:flex;flex-direction:column;gap:10px;z-index:2000;max-width:320px;}
+.toast{background:var(--azure-ink);color:#fff;padding:14px 18px;border-radius:14px;font-size:.85rem;font-weight:600;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;animation:toastIn .35s cubic-bezier(.22,1,.36,1);}
+.toast.out{animation:toastOut .3s ease forwards;}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px) scale(.9);}to{opacity:1;transform:translateX(0) scale(1);}}
+@keyframes toastOut{to{opacity:0;transform:translateX(40px) scale(.9);}}
+.toast .dot{width:8px;height:8px;border-radius:50%;background:var(--azure);flex-shrink:0;}
+
+/* confetti */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:3000;}
+
+/* floating cart */
+.floating-cart{position:fixed;bottom:26px;left:26px;z-index:600;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--azure),var(--azure-deep));display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(95,184,236,.5);font-size:1.3rem;transition:transform .25s ease;}
+.floating-cart:hover{transform:scale(1.08) translateY(-3px);}
+.floating-cart .badge{position:absolute;top:-6px;right:-6px;background:var(--azure-ink);color:#fff;font-size:.66rem;font-weight:700;min-width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.floating-cart.bump{animation:bump .4s ease;}
+@keyframes bump{0%{transform:scale(1);}40%{transform:scale(1.25);}100%{transform:scale(1);}}
+
+/* skeleton loading */
+.skel{position:relative;overflow:hidden;background:var(--silver);border-radius:var(--r-md);}
+.skel::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-100%);animation:shimmer 1.2s infinite;}
+[data-theme="dark"] .skel::after{background:linear-gradient(100deg,transparent,rgba(255,255,255,.10),transparent);}
+@keyframes shimmer{to{transform:translateX(100%);}}
+
+/* animations */
+.fade-up{animation:fadeUp .6s cubic-bezier(.22,1,.36,1) both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.scale-in{animation:scaleIn .45s cubic-bezier(.22,1,.36,1) both;}
+@keyframes scaleIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+.stagger > *{animation:fadeUp .6s cubic-bezier(.22,1,.36,1) both;}
+.stagger > *:nth-child(1){animation-delay:.02s}.stagger > *:nth-child(2){animation-delay:.07s}.stagger > *:nth-child(3){animation-delay:.12s}.stagger > *:nth-child(4){animation-delay:.17s}.stagger > *:nth-child(5){animation-delay:.22s}.stagger > *:nth-child(6){animation-delay:.27s}.stagger > *:nth-child(7){animation-delay:.32s}.stagger > *:nth-child(8){animation-delay:.37s}
+
+/* form elements */
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:.76rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-soft);margin-bottom:8px;}
+.field input,.field select,.field textarea{width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:.92rem;transition:border-color .2s,box-shadow .2s;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--azure-deep);box-shadow:0 0 0 4px rgba(143,211,255,.22);}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media (max-width:560px){.row-2{grid-template-columns:1fr;}}
+
+/* tables */
+table.luxe{width:100%;border-collapse:collapse;}
+table.luxe th{text-align:left;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft);padding:12px 14px;border-bottom:1px solid var(--line);}
+table.luxe td{padding:14px;border-bottom:1px solid var(--line);font-size:.88rem;}
+
+/* badges/status */
+.status{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;font-size:.7rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+.status.processing{background:#FFF3D6;color:#8a6300;}
+.status.shipped{background:#DCEEFF;color:#0E5AA8;}
+.status.delivered{background:#DAF5E3;color:#1B7A41;}
+.status.cancelled{background:#FBE0E0;color:#A12626;}
+[data-theme="dark"] .status.processing{background:#3a2f0d;color:#ffd166;}
+[data-theme="dark"] .status.shipped{background:#0d2a3a;color:#7cc4ff;}
+[data-theme="dark"] .status.delivered{background:#0d2f1a;color:#7be3a0;}
+[data-theme="dark"] .status.cancelled{background:#3a0d0d;color:#ff8a8a;}
+
+.stars{color:#E0A800;letter-spacing:2px;font-size:.84rem;}
+.empty-state{text-align:center;padding:90px 20px;}
+.empty-state .glyph{font-size:3.4rem;margin-bottom:18px;}
+.empty-state h3{margin-bottom:10px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(11,13,15,.5);z-index:1500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--surface);border-radius:var(--r-lg);padding:36px;max-width:440px;width:100%;box-shadow:var(--shadow-lg);transform:scale(.9);transition:transform .3s cubic-bezier(.22,1,.36,1);}
+.modal-overlay.open .modal{transform:scale(1);}
+/* ============ HOME PAGE ============ */
+.hero{position:relative;min-height:86vh;display:flex;align-items:center;overflow:hidden;background:radial-gradient(ellipse at top right,rgba(143,211,255,.35),transparent 60%),linear-gradient(180deg,var(--bg),var(--bg));}
+.hero-bg-shape{position:absolute;top:-10%;right:-12%;width:60%;height:120%;border-radius:50%;background:radial-gradient(circle,rgba(143,211,255,.5),transparent 70%);filter:blur(10px);animation:floaty 9s ease-in-out infinite;}
+.hero-bg-shape.b{top:40%;left:-15%;width:40%;height:80%;background:radial-gradient(circle,rgba(154,165,172,.25),transparent 70%);animation-delay:-3s;}
+@keyframes floaty{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-26px) scale(1.04);}}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:50px;position:relative;z-index:2;}
+.hero-title{font-size:clamp(2.6rem,5.6vw,4.6rem);margin:18px 0 22px;}
+.hero-title em{font-style:normal;color:var(--azure-deep);}
+.hero-cta{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;}
+.hero-visual{position:relative;aspect-ratio:4/5;border-radius:var(--r-lg);box-shadow:var(--shadow-lg);}
+.hero-visual .ph-img{position:absolute;inset:0;border-radius:var(--r-lg);overflow:hidden;}
+.hero-stats-float{position:absolute;bottom:-26px;left:-26px;background:var(--surface);border-radius:var(--r-md);padding:18px 22px;box-shadow:var(--shadow-md);display:flex;gap:18px;}
+.hero-stats-float .n{font-family:var(--ff-display);font-size:1.5rem;font-weight:700;color:var(--azure-deep);}
+.hero-stats-float .l{font-size:.66rem;color:var(--text-soft);text-transform:uppercase;letter-spacing:.05em;}
+@media (max-width:880px){.hero-grid{grid-template-columns:1fr;}.hero-visual{margin-top:30px;}}
+
+.scroller{display:flex;gap:20px;overflow-x:auto;padding-bottom:10px;scroll-snap-type:x mandatory;}
+.scroller::-webkit-scrollbar{display:none;}
+.scroller .card{scroll-snap-align:start;flex:0 0 260px;}
+
+.product-card{display:flex;flex-direction:column;overflow:hidden;cursor:pointer;}
+.product-card .ph-img{aspect-ratio:1/1.1;}
+.product-card .pc-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;}
+.product-card .pc-cat{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--azure-deep);font-weight:700;}
+.product-card .pc-name{font-size:.95rem;font-weight:700;}
+.product-card .pc-price{display:flex;align-items:baseline;gap:8px;margin-top:4px;}
+.product-card .pc-price .now{font-weight:800;font-size:1.02rem;}
+.product-card .pc-price .was{font-size:.78rem;text-decoration:line-through;color:var(--text-soft);}
+.pc-discount{position:absolute;top:12px;left:12px;background:var(--azure-ink);color:#fff;font-size:.66rem;font-weight:800;padding:5px 10px;border-radius:8px;z-index:2;}
+.pc-wish{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;z-index:2;transition:transform .2s;}
+.pc-wish:hover{transform:scale(1.15);}
+.pc-wish.active{color:#e0455a;}
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+@media (max-width:1080px){.product-grid{grid-template-columns:repeat(3,1fr);}}
+@media (max-width:760px){.product-grid{grid-template-columns:repeat(2,1fr);}.hero-stats-float{gap:10px;padding:14px 16px;}}
+@media (max-width:480px){.product-grid{grid-template-columns:1fr 1fr;gap:12px;}}
+
+.countdown-box{display:flex;gap:14px;}
+.countdown-box .seg{background:var(--azure-ink);color:#fff;border-radius:12px;padding:14px 16px;min-width:70px;text-align:center;}
+.countdown-box .seg .num{font-family:var(--ff-display);font-size:1.6rem;font-weight:700;}
+.countdown-box .seg .lab{font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75;}
+.flash-banner{background:linear-gradient(120deg,var(--azure-ink),#1a4361);color:#fff;border-radius:var(--r-lg);padding:42px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;position:relative;overflow:hidden;}
+.flash-banner::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(143,211,255,.4),transparent 70%);}
+
+.stats-band{background:var(--azure-ink);color:#fff;border-radius:var(--r-lg);padding:50px 40px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;}
+.stats-band .num{font-family:var(--ff-display);font-size:2.2rem;font-weight:700;color:var(--azure);}
+.stats-band .lab{font-size:.74rem;letter-spacing:.05em;color:#BFE6FF;margin-top:6px;}
+@media (max-width:760px){.stats-band{grid-template-columns:1fr 1fr;}}
+
+.testi-card{padding:28px;}
+.testi-card .stars{margin-bottom:12px;}
+.testi-card .who{display:flex;align-items:center;gap:10px;margin-top:16px;}
+.avatar-dot{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--azure),var(--silver));display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--azure-ink);font-size:.82rem;}
+
+.insta-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+.insta-grid .ph-img{aspect-ratio:1/1;border-radius:var(--r-sm);}
+@media (max-width:880px){.insta-grid{grid-template-columns:repeat(3,1fr);}}
+
+.story-split{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;}
+@media (max-width:840px){.story-split{grid-template-columns:1fr;}}
+/* ============ SHOP PAGE ============ */
+.shop-head{padding:48px 0 28px;background:linear-gradient(180deg,rgba(143,211,255,.16),transparent);}
+.shop-layout{display:grid;grid-template-columns:260px 1fr;gap:36px;align-items:flex-start;}
+@media (max-width:880px){.shop-layout{grid-template-columns:1fr;}}
+.filter-panel{position:sticky;top:94px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;}
+.filter-panel h4{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;margin:18px 0 12px;color:var(--text-soft);}
+.filter-panel h4:first-child{margin-top:0;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:7px 13px;border-radius:100px;background:var(--silver);font-size:.76rem;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .2s;}
+.chip.active{background:var(--azure);color:var(--azure-ink);border-color:var(--azure-deep);}
+.color-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);cursor:pointer;position:relative;}
+.color-dot.active::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;text-shadow:0 0 2px #000;}
+.range-row{display:flex;align-items:center;gap:10px;}
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:14px;flex-wrap:wrap;}
+.view-toggle{display:flex;gap:4px;background:var(--silver);border-radius:10px;padding:4px;}
+.view-toggle button{padding:7px 11px;border-radius:8px;font-size:.85rem;}
+.view-toggle button.active{background:var(--surface);box-shadow:var(--shadow-sm);}
+.product-list .product-card{flex-direction:row;}
+.product-list .product-card .ph-img{width:160px;aspect-ratio:auto;flex-shrink:0;}
+.product-list .product-card .pc-body{flex:1;}
+.pagination{display:flex;justify-content:center;gap:8px;margin-top:40px;}
+.pagination button{width:38px;height:38px;border-radius:10px;background:var(--silver);font-weight:700;font-size:.84rem;}
+.pagination button.active{background:var(--azure-ink);color:#fff;}
+.search-suggest-box{position:relative;}
+.suggest-dropdown{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-md);z-index:50;overflow:hidden;}
+.suggest-dropdown .sg-item{padding:12px 16px;font-size:.86rem;cursor:pointer;display:flex;align-items:center;gap:10px;}
+.suggest-dropdown .sg-item:hover{background:var(--silver);}
+.cat-tile{position:relative;border-radius:var(--r-md);overflow:hidden;aspect-ratio:1/.85;cursor:pointer;}
+.cat-tile .ph-img{position:absolute;inset:0;}
+.cat-tile .cat-label{position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(0deg,rgba(11,13,15,.6),transparent);color:#fff;font-weight:700;font-family:var(--ff-display);font-size:1.05rem;z-index:2;}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media (max-width:760px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
+
+/* ============ PRODUCT DETAIL ============ */
+.pd-layout{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:flex-start;}
+@media (max-width:880px){.pd-layout{grid-template-columns:1fr;}}
+.pd-gallery-main{aspect-ratio:1/1;border-radius:var(--r-lg);overflow:hidden;cursor:zoom-in;position:relative;}
+.pd-gallery-main .ph-img{width:100%;height:100%;transition:transform .35s ease;}
+.pd-gallery-main.zoomed .ph-img{transform:scale(1.6);}
+.pd-thumbs{display:flex;gap:10px;margin-top:14px;}
+.pd-thumbs .th{width:70px;height:70px;border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent;}
+.pd-thumbs .th.active{border-color:var(--azure-deep);}
+.pd-info h1{font-size:1.9rem;margin:6px 0 10px;}
+.pd-price-row{display:flex;align-items:baseline;gap:12px;margin:14px 0;}
+.pd-price-row .now{font-size:1.7rem;font-weight:800;}
+.pd-price-row .was{text-decoration:line-through;color:var(--text-soft);}
+.swatch-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+.size-box{width:46px;height:42px;border-radius:10px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;cursor:pointer;}
+.size-box.active{background:var(--azure-ink);color:#fff;border-color:var(--azure-ink);}
+.qty-stepper{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:100px;overflow:hidden;}
+.qty-stepper button{width:38px;height:38px;font-size:1.1rem;}
+.qty-stepper span{min-width:36px;text-align:center;font-weight:700;}
+.pd-actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+.pd-meta-row{display:flex;gap:20px;margin-top:22px;color:var(--text-soft);font-size:.82rem;flex-wrap:wrap;}
+.tab-row{display:flex;gap:24px;border-bottom:1px solid var(--line);margin:40px 0 24px;}
+.tab-row button{padding:12px 4px;font-weight:700;font-size:.86rem;color:var(--text-soft);border-bottom:2px solid transparent;}
+.tab-row button.active{color:var(--text);border-color:var(--azure-deep);}
+.review-row{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--line);}
+/* ============ CART / CHECKOUT ============ */
+.cart-layout{display:grid;grid-template-columns:1.6fr 1fr;gap:36px;align-items:flex-start;}
+@media (max-width:880px){.cart-layout{grid-template-columns:1fr;}}
+.cart-row{display:grid;grid-template-columns:80px 1fr auto auto;gap:16px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line);}
+.cart-row .ph-img{width:80px;height:80px;border-radius:12px;}
+.cart-remove{color:var(--text-soft);font-size:.78rem;text-decoration:underline;margin-top:6px;}
+.summary-card{position:sticky;top:94px;padding:28px;}
+.summary-line{display:flex;justify-content:space-between;margin-bottom:12px;font-size:.9rem;color:var(--text-soft);}
+.summary-line.total{font-size:1.15rem;font-weight:800;color:var(--text);margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
+.coupon-row{display:flex;gap:8px;margin:18px 0;}
+.coupon-row input{flex:1;}
+.checkout-steps{display:flex;gap:0;margin-bottom:40px;}
+.checkout-steps .step{flex:1;text-align:center;position:relative;padding-bottom:14px;border-bottom:3px solid var(--line);color:var(--text-soft);font-weight:700;font-size:.8rem;}
+.checkout-steps .step.active{color:var(--azure-deep);border-color:var(--azure-deep);}
+.pay-option{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1.5px solid var(--line);border-radius:14px;margin-bottom:12px;cursor:pointer;transition:border-color .2s,background .2s;}
+.pay-option.active{border-color:var(--azure-deep);background:rgba(143,211,255,.08);}
+.pay-option .radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;position:relative;}
+.pay-option.active .radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--azure-deep);}
+.order-success{text-align:center;padding:60px 20px;}
+.order-success .check-ring{width:96px;height:96px;border-radius:50%;background:rgba(143,211,255,.18);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:2.4rem;animation:scaleIn .5s cubic-bezier(.22,1,.36,1);}
+
+/* ============ WALLET ============ */
+.wallet-card{background:linear-gradient(135deg,var(--azure-ink) 0%,#1a4361 55%,var(--azure-deep) 100%);color:#fff;border-radius:var(--r-lg);padding:36px;position:relative;overflow:hidden;min-height:200px;}
+.wallet-card::after{content:"";position:absolute;right:-50px;bottom:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(143,211,255,.4),transparent 70%);}
+.wallet-card .bal-label{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:#9FD9FF;}
+.wallet-card .bal-num{font-family:var(--ff-display);font-size:2.8rem;font-weight:700;margin:8px 0 18px;position:relative;z-index:1;}
+.topup-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:20px 0;}
+@media (max-width:680px){.topup-grid{grid-template-columns:repeat(3,1fr);}}
+.topup-amt{padding:18px 8px;border-radius:14px;border:1.5px solid var(--line);text-align:center;font-weight:700;cursor:pointer;transition:all .2s;}
+.topup-amt:hover,.topup-amt.active{border-color:var(--azure-deep);background:rgba(143,211,255,.1);}
+.txn-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);}
+.txn-row .ic{width:38px;height:38px;border-radius:50%;background:var(--silver);display:flex;align-items:center;justify-content:center;margin-right:12px;}
+.txn-amt.pos{color:#1B7A41;font-weight:700;}
+.txn-amt.neg{color:#A12626;font-weight:700;}
+
+/* ============ LOYALTY ============ */
+.loyalty-login-wrap{max-width:440px;margin:60px auto;}
+.tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+@media (max-width:760px){.tier-grid{grid-template-columns:repeat(2,1fr);}}
+.tier-card{border-radius:var(--r-md);padding:22px;text-align:center;border:1.5px solid var(--line);}
+.tier-card.silver{background:linear-gradient(160deg,#EDEFF1,#fff);}
+.tier-card.gold{background:linear-gradient(160deg,#FCEFC7,#fff);}
+.tier-card.platinum{background:linear-gradient(160deg,#E4EEF3,#fff);}
+.tier-card.diamond{background:linear-gradient(160deg,#DCEFFD,#fff);}
+.tier-card.current{border-color:var(--azure-deep);box-shadow:var(--shadow-md);}
+.points-progress{height:10px;border-radius:10px;background:var(--silver);overflow:hidden;margin:14px 0;}
+.points-progress .fill{height:100%;background:linear-gradient(90deg,var(--azure),var(--azure-deep));border-radius:10px;transition:width 1s cubic-bezier(.22,1,.36,1);}
+.dash-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;}
+@media (max-width:880px){.dash-grid{grid-template-columns:1fr;}}
+
+/* ============ ORDERS ============ */
+.order-card{padding:22px;margin-bottom:16px;}
+.order-card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.timeline{display:flex;justify-content:space-between;margin:26px 0;position:relative;}
+.timeline::before{content:"";position:absolute;top:11px;left:0;right:0;height:2px;background:var(--line);z-index:0;}
+.timeline .tl-step{flex:1;text-align:center;position:relative;z-index:1;}
+.timeline .tl-dot{width:24px;height:24px;border-radius:50%;background:var(--silver);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;}
+.timeline .tl-step.done .tl-dot{background:var(--azure-deep);}
+.timeline .tl-step.now .tl-dot{background:var(--azure-ink);box-shadow:0 0 0 4px rgba(143,211,255,.4);}
+.timeline .tl-lab{font-size:.7rem;color:var(--text-soft);font-weight:600;}
+
+/* ============ PROFILE / SETTINGS ============ */
+.account-layout{display:grid;grid-template-columns:240px 1fr;gap:34px;}
+@media (max-width:820px){.account-layout{grid-template-columns:1fr;}}
+.account-nav{display:flex;flex-direction:column;gap:4px;}
+.account-nav a{padding:12px 16px;border-radius:12px;font-weight:600;font-size:.88rem;color:var(--text-soft);}
+.account-nav a.active{background:var(--azure-ink);color:#fff;}
+.avatar-big{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--azure),var(--silver));display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;color:var(--azure-ink);}
+.toggle{width:48px;height:28px;border-radius:100px;background:var(--silver);position:relative;flex-shrink:0;transition:background .25s;}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:var(--shadow-sm);transition:transform .25s cubic-bezier(.22,1,.36,1);}
+.toggle.on{background:var(--azure-deep);}
+.toggle.on::after{transform:translateX(20px);}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--line);gap:14px;}
+.accent-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
+.accent-dot.active{border-color:var(--text);}
+
+/* ============ ABOUT / CONTACT / FAQ / LEGAL ============ */
+.page-hero{padding:70px 0 40px;text-align:center;}
+.page-hero h1{font-size:clamp(2.1rem,4vw,3.2rem);}
+.timeline-vert{border-left:2px solid var(--line);padding-left:28px;display:flex;flex-direction:column;gap:30px;}
+.timeline-vert .tv-item{position:relative;}
+.timeline-vert .tv-item::before{content:"";position:absolute;left:-35px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--azure-deep);box-shadow:0 0 0 4px rgba(143,211,255,.3);}
+.fake-map{height:300px;border-radius:var(--r-md);background:repeating-linear-gradient(45deg,var(--silver) 0 2px,transparent 2px 14px),linear-gradient(160deg,#dceefb,#eef5f9);position:relative;overflow:hidden;}
+.fake-map .pin{position:absolute;top:50%;left:50%;transform:translate(-50%,-100%);font-size:2rem;animation:bouncePin 1.6s ease-in-out infinite;}
+@keyframes bouncePin{0%,100%{transform:translate(-50%,-100%);}50%{transform:translate(-50%,-114%);}}
+.faq-item{border-bottom:1px solid var(--line);padding:18px 0;}
+.faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700;font-size:.94rem;}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease;color:var(--text-soft);font-size:.88rem;line-height:1.6;}
+.faq-item.open .faq-a{max-height:300px;padding-top:12px;}
+.faq-q .chev{transition:transform .3s;}
+.faq-item.open .faq-q .chev{transform:rotate(180deg);}
+.legal-body{max-width:760px;margin:0 auto;line-height:1.8;color:var(--text-soft);}
+.legal-body h3{color:var(--text);margin:28px 0 10px;font-size:1.1rem;}
+.hours-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:.88rem;}
+.business-card{padding:30px;}
+
+/* ============ MISC RESPONSIVE ============ */
+@media (max-width:560px){
+  .section{padding:56px 0;}
+  .pd-actions{flex-direction:column;}
+  .pd-actions .btn{width:100%;}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div id="toast-stack"></div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" data-link class="logo"><span class="mark"></span> Azure Atelier</a>
+    <nav class="nav-main" id="nav-main"></nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="btn-search" title="Search">🔍</button>
+      <a href="/wishlist" data-link class="icon-btn" id="btn-wishlist" title="Wishlist">♡<span class="badge" id="wishlist-badge" style="display:none">0</span></a>
+      <a href="/cart" data-link class="icon-btn" id="btn-cart" title="Cart">🛍<span class="badge" id="cart-badge" style="display:none">0</span></a>
+      <button class="hamburger" id="btn-hamburger" title="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <button class="sb-close" id="sb-close">✕</button>
+</aside>
+
+<main id="app"></main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="color:#fff;margin-bottom:14px;"><span class="mark"></span> Azure Atelier</div>
+        <p style="color:#BFE6FF;font-size:.86rem;line-height:1.7;max-width:280px;">Quiet luxury for the modern wardrobe. Crafted in small batches, designed to outlast every season.</p>
+        <div class="newsletter-row">
+          <input type="email" id="newsletter-email" placeholder="Your email address">
+          <button class="btn btn-primary btn-sm" id="newsletter-btn">Join</button>
+        </div>
+        <div class="social-row">
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="X">𝕏</a>
+          <a href="#" title="Pinterest">📌</a>
+        </div>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="/shop" data-link>All Products</a></li>
+          <li><a href="/categories" data-link>Categories</a></li>
+          <li><a href="/shop?sort=newest" data-link>New Arrivals</a></li>
+          <li><a href="/shop?sort=popular" data-link>Best Sellers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <ul>
+          <li><a href="/orders" data-link>Orders</a></li>
+          <li><a href="/wallet" data-link>Wallet</a></li>
+          <li><a href="/loyalty-dashboard" data-link>Loyalty</a></li>
+          <li><a href="/profile" data-link>Profile</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about" data-link>About</a></li>
+          <li><a href="/contact" data-link>Contact</a></li>
+          <li><a href="/faq" data-link>FAQ</a></li>
+          <li><a href="/terms" data-link>Terms</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacy" data-link>Privacy Policy</a></li>
+          <li><a href="/terms" data-link>Terms of Service</a></li>
+        </ul>
+        <h4 style="margin-top:24px;">We Accept</h4>
+        <p style="color:#BFE6FF;font-size:.82rem;">Wallet · Card · Cash on Delivery</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Azure Atelier. All rights reserved.</span>
+      <span>Designed with quiet luxury in mind.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="floating-cart" id="floating-cart"><span>🛍</span><span class="badge" id="fc-badge" style="display:none">0</span></div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+/* =========================================================
+   AZURE ATELIER — APPLICATION SCRIPT
+   Single-file SPA. No frameworks, no dependencies.
+   ========================================================= */
+
+/* ---------- Small utilities ---------- */
+const qs  = (s,el=document)=>el.querySelector(s);
+const qsa = (s,el=document)=>Array.from(el.querySelectorAll(s));
+const ce  = (tag,cls)=>{const e=document.createElement(tag); if(cls) e.className=cls; return e;};
+const esc = (str)=> String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function debounce(fn,ms){let t;return (...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
+function uid(prefix){return prefix+'-'+Math.random().toString(36).slice(2,9).toUpperCase();}
+function fmtMoney(n){
+  const cur = state.settings.currency || 'RM';
+  const rate = cur === 'USD' ? 0.21 : 1;
+  const val = (n*rate).toFixed(2);
+  return (cur==='USD' ? '$' : 'RM') + Number(val).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
+
+/* ---------- Toasts ---------- */
+function toast(msg, type){
+  const stack = qs('#toast-stack');
+  const t = ce('div','toast');
+  t.innerHTML = `<span class="dot"></span><span>${esc(msg)}</span>`;
+  stack.appendChild(t);
+  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(),320); }, 2600);
+}
+
+/* ---------- Confetti ---------- */
+function fireConfetti(){
+  const canvas = qs('#confetti-canvas');
+  canvas.width = innerWidth; canvas.height = innerHeight;
+  const ctx = canvas.getContext('2d');
+  const colors = ['#8FD3FF','#5FB8EC','#E7ECEF','#0E2A3D','#FFFFFF'];
+  let particles = Array.from({length:140},()=>({
+    x: Math.random()*canvas.width,
+    y: -20 - Math.random()*canvas.height*0.3,
+    r: 4+Math.random()*5,
+    c: colors[Math.floor(Math.random()*colors.length)],
+    vy: 2+Math.random()*4,
+    vx: -2+Math.random()*4,
+    rot: Math.random()*360,
+    vr: -6+Math.random()*12
+  }));
+  let frame=0;
+  function tick(){
+    frame++;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.c;
+      ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);
+      ctx.restore();
+    });
+    particles = particles.filter(p=>p.y < canvas.height+30);
+    if(frame<150 && particles.length>0){ requestAnimationFrame(tick); }
+    else { ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  tick();
+}
+
+/* ---------- Ripple effect (event delegation) ---------- */
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.btn, .icon-btn, .chip, .topup-amt, .pay-option, .size-box, .pagination button');
+  if(!btn) return;
+  const rect = btn.getBoundingClientRect();
+  const r = ce('span','ripple');
+  const size = Math.max(rect.width, rect.height) * 1.3;
+  r.style.width = r.style.height = size+'px';
+  r.style.left = (e.clientX - rect.left - size/2)+'px';
+  r.style.top = (e.clientY - rect.top - size/2)+'px';
+  const prevPos = getComputedStyle(btn).position;
+  if(prevPos === 'static') btn.style.position='relative';
+  btn.style.overflow = btn.style.overflow || 'hidden';
+  btn.appendChild(r);
+  setTimeout(()=>r.remove(),650);
+});
+
+/* ---------- Animated counters ---------- */
+function animateCounter(el, to, duration=1200, prefix='', suffix=''){
+  const start = 0;
+  const startTime = performance.now();
+  function step(now){
+    const p = clamp((now-startTime)/duration,0,1);
+    const eased = 1 - Math.pow(1-p,3);
+    const val = Math.round(start + (to-start)*eased);
+    el.textContent = prefix + val.toLocaleString() + suffix;
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* =========================================================
+   STATE MANAGEMENT (LocalStorage backed)
+   ========================================================= */
+const LS_KEY = 'azureAtelier_state_v1';
+
+function defaultState(){
+  return {
+    cart: [],          // {productId, size, color, qty}
+    wishlist: [],       // [productId]
+    recentlyViewed: [],
+    recentSearches: [],
+    wallet: { balance: 500.00, transactions: [
+      {id:uid('TXN'), type:'credit', label:'Welcome Bonus', amount:500.00, date: new Date().toISOString()}
+    ]},
+    orders: [],
+    profile: { name:'Guest Member', email:'', phone:'', birthday:'', address:'', avatarColor:'#8FD3FF' },
+    settings: { theme:'light', accent:'#8FD3FF', currency:'RM', language:'en', notifications:true },
+    loyalty: { loggedIn:false, remember:false, points:120, tier:'Silver', history:[
+      {label:'Welcome bonus', points:120, date:new Date().toISOString()}
+    ]},
+    couponApplied: null,
+  };
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    // merge with defaults to avoid missing-key errors on upgrade
+    const d = defaultState();
+    return {
+      ...d, ...parsed,
+      wallet:{...d.wallet, ...(parsed.wallet||{})},
+      profile:{...d.profile, ...(parsed.profile||{})},
+      settings:{...d.settings, ...(parsed.settings||{})},
+      loyalty:{...d.loyalty, ...(parsed.loyalty||{})},
+    };
+  }catch(e){ return defaultState(); }
+}
+
+let state = loadState();
+function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+
+/* =========================================================
+   PRODUCT CATALOG (generated, 40+ items)
+   ========================================================= */
+const CATEGORIES = ['T-Shirts','Hoodies','Jackets','Jeans','Pants','Shoes','Bags','Accessories','Dresses'];
+const CATEGORY_ICONS = {
+  'T-Shirts':'👕','Hoodies':'🧥','Jackets':'🧥','Jeans':'👖','Pants':'👖','Shoes':'👞','Bags':'👜','Accessories':'⌚','Dresses':'👗'
+};
+const COLOR_SWATCHES = [
+  {name:'Azure',hex:'#8FD3FF'},{name:'Silver',hex:'#E7ECEF'},{name:'Black',hex:'#0B0D0F'},
+  {name:'White',hex:'#FFFFFF'},{name:'Soft Gray',hex:'#9AA5AC'},{name:'Navy',hex:'#1A2B45'},
+  {name:'Sand',hex:'#D8C6A6'},{name:'Blush',hex:'#E9C7C7'}
+];
+const SIZE_SETS = {
+  'Shoes':['EU38','EU39','EU40','EU41','EU42','EU43'],
+  'Bags':['One Size'],
+  'Accessories':['One Size'],
+  default:['XS','S','M','L','XL','XXL']
+};
+const ADJ = ['Atelier','Heritage','Signature','Quiet','Modern','Essential','Tailored','Minimal','Classic','Reserve','Studio','Editorial','Pure','Luxe','Capsule'];
+const MATS = ['Cotton','Cashmere','Wool','Linen','Silk-Blend','Suede','Leather','Denim','Merino','Twill'];
+
+function makeName(cat, i){
+  const adj = ADJ[i % ADJ.length];
+  const mat = MATS[(i*3) % MATS.length];
+  const base = {
+    'T-Shirts':'Tee', 'Hoodies':'Hoodie', 'Jackets':'Jacket', 'Jeans':'Denim',
+    'Pants':'Trouser', 'Shoes':'Sneaker', 'Bags':'Tote', 'Accessories':'Watch', 'Dresses':'Dress'
+  }[cat];
+  return `${adj} ${mat} ${base}`;
+}
+
+function svgPlaceholder(icon){
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="62" font-size="44" text-anchor="middle">${icon}</text></svg>`;
+}
+
+const PRODUCTS = [];
+(function generateProducts(){
+  let id = 1;
+  CATEGORIES.forEach((cat, ci)=>{
+    const count = 5; // 9 categories * 5 ~ 45 products
+    for(let i=0;i<count;i++){
+      const basePrice = 120 + ((ci*37 + i*53) % 880);
+      const hasDiscount = (i+ci) % 3 === 0;
+      const discountPct = hasDiscount ? [10,15,20,25,30][(i+ci)%5] : 0;
+      const rating = (3.6 + ((i+ci)%14)/10).toFixed(1);
+      const reviews = 8 + ((i*ci+1)*7) % 240;
+      const stock = (i*3+ci) % 9 === 0 ? 0 : 4 + ((i+ci)%26);
+      const sizes = SIZE_SETS[cat] || SIZE_SETS.default;
+      const colors = [COLOR_SWATCHES[(ci+i)%COLOR_SWATCHES.length], COLOR_SWATCHES[(ci+i+2)%COLOR_SWATCHES.length], COLOR_SWATCHES[(ci+i+4)%COLOR_SWATCHES.length]];
+      PRODUCTS.push({
+        id: 'P'+String(id).padStart(3,'0'),
+        name: makeName(cat,i+ci),
+        category: cat,
+        price: basePrice,
+        discount: discountPct,
+        rating: Number(rating),
+        reviews,
+        stock,
+        description: `A ${MATS[(i*3)%MATS.length].toLowerCase()} ${cat.toLowerCase().slice(0,-1)} from the ${ADJ[(id)%ADJ.length]} line. Cut for an effortless silhouette, finished by hand, and built to be worn season after season. Designed in our atelier with quiet, considered detail.`,
+        sizes,
+        colors,
+        icon: CATEGORY_ICONS[cat],
+        new: (id % 7 === 0),
+        bestseller: (id % 5 === 0),
+      });
+      id++;
+    }
+  });
+})();
+
+function productById(id){ return PRODUCTS.find(p=>p.id===id); }
+function priceAfterDiscount(p){ return p.discount ? +(p.price * (1-p.discount/100)).toFixed(2) : p.price; }
+function placeholderImg(p, extraStyle=''){
+  return `<div class="ph-img" style="${extraStyle}">${svgPlaceholder(p.icon)}</div>`;
+}
+
+/* =========================================================
+   ROUTER
+   ========================================================= */
+const ROUTES = {
+  '/':'home', '/shop':'shop', '/categories':'categories', '/product':'product',
+  '/search':'search', '/wishlist':'wishlist', '/cart':'cart', '/checkout':'checkout',
+  '/wallet':'wallet', '/topup':'topup', '/loyalty-login':'loyaltyLogin', '/loyalty-dashboard':'loyaltyDashboard',
+  '/orders':'orders', '/order-tracking':'orderTracking', '/profile':'profile', '/settings':'settings',
+  '/about':'about', '/contact':'contact', '/faq':'faq', '/privacy':'privacy', '/terms':'terms'
+};
+
+const PAGE_TITLES = {
+  home:'Azure Atelier — Quiet Luxury Fashion', shop:'Shop All — Azure Atelier', categories:'Categories — Azure Atelier',
+  product:'Product — Azure Atelier', search:'Search — Azure Atelier', wishlist:'Wishlist — Azure Atelier',
+  cart:'Your Bag — Azure Atelier', checkout:'Checkout — Azure Atelier', wallet:'Wallet — Azure Atelier',
+  topup:'Top Up — Azure Atelier', loyaltyLogin:'Member Login — Azure Atelier', loyaltyDashboard:'Loyalty — Azure Atelier',
+  orders:'Your Orders — Azure Atelier', orderTracking:'Track Order — Azure Atelier', profile:'Profile — Azure Atelier',
+  settings:'Settings — Azure Atelier', about:'About — Azure Atelier', contact:'Contact — Azure Atelier',
+  faq:'FAQ — Azure Atelier', privacy:'Privacy Policy — Azure Atelier', terms:'Terms — Azure Atelier'
+};
+
+function navigate(path, push=true){
+  if(push){
+    try{ history.pushState({}, '', path); }
+    catch(e){ /* file:// origin restricts pushState — fall back to in-memory routing */ }
+  }
+  render(path);
+}
+
+document.addEventListener('click', (e)=>{
+  const a = e.target.closest('[data-link]');
+  if(a){
+    e.preventDefault();
+    const href = a.getAttribute('href');
+    closeSidebar();
+    navigate(href);
+  }
+});
+window.addEventListener('popstate', ()=> render(location.pathname + location.search));
+
+function parsePath(full){
+  let [path, query] = full.split('?');
+  path = path || '/';
+  if(path.endsWith('/index.html')) path = '/';
+  const params = new URLSearchParams(query||'');
+  return {path, params};
+}
+
+const renderers = {}; // filled in below per-page
+
+function render(full){
+  const {path, params} = parsePath(full);
+  const key = ROUTES[path] || 'notFound';
+  const app = qs('#app');
+  app.classList.add('fade-out');
+  setTimeout(()=>{
+    document.title = PAGE_TITLES[key] || 'Azure Atelier';
+    window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+    if(renderers[key]) renderers[key](params);
+    else app.innerHTML = notFoundHTML();
+    updateHeaderUI();
+    app.classList.remove('fade-out');
+    app.classList.add('fade-in');
+    setTimeout(()=>app.classList.remove('fade-in'),300);
+  }, 140);
+}
+
+function notFoundHTML(){
+  return `<div class="section wrap"><div class="empty-state"><div class="glyph">🧭</div><h2>Page not found</h2><p class="lead">The page you're looking for doesn't exist.</p><br><a href="/" data-link class="btn btn-primary">Back to Home</a></div></div>`;
+}
+
+/* =========================================================
+   HEADER / NAV / SIDEBAR / SEARCH
+   ========================================================= */
+const NAV_LINKS = [
+  {href:'/', label:'Home'}, {href:'/shop', label:'Shop'}, {href:'/categories', label:'Categories'},
+  {href:'/wallet', label:'Wallet'}, {href:'/loyalty-dashboard', label:'Loyalty'}, {href:'/about', label:'About'}, {href:'/contact', label:'Contact'}
+];
+function buildNav(){
+  qs('#nav-main').innerHTML = NAV_LINKS.map(l=>`<a href="${l.href}" data-link>${l.label}</a>`).join('');
+  const sb = qs('#sidebar');
+  sb.innerHTML = `<button class="sb-close" id="sb-close">✕</button>` + NAV_LINKS.map(l=>`<a href="${l.href}" data-link>${l.label}</a>`).join('') +
+    `<div class="divider"></div>` +
+    [['/cart','Bag'],['/wishlist','Wishlist'],['/orders','Orders'],['/profile','Profile'],['/settings','Settings']].map(([h,l])=>`<a href="${h}" data-link>${l}</a>`).join('');
+}
+function updateHeaderUI(){
+  const path = location.pathname;
+  qsa('.nav-main a').forEach(a=> a.classList.toggle('active', a.getAttribute('href')===path));
+  const cartCount = state.cart.reduce((s,i)=>s+i.qty,0);
+  const wishCount = state.wishlist.length;
+  [qs('#cart-badge'), qs('#fc-badge')].forEach(b=>{ if(!b) return; b.textContent=cartCount; b.style.display = cartCount>0?'flex':'none'; });
+  const wb = qs('#wishlist-badge'); wb.textContent = wishCount; wb.style.display = wishCount>0?'flex':'none';
+}
+function bumpCart(){
+  const fc = qs('#floating-cart');
+  fc.classList.remove('bump'); void fc.offsetWidth; fc.classList.add('bump');
+}
+function closeSidebar(){ qs('#sidebar').classList.remove('open'); qs('#sidebar-overlay').classList.remove('open'); }
+qs('#btn-hamburger').addEventListener('click', ()=>{ qs('#sidebar').classList.add('open'); qs('#sidebar-overlay').classList.add('open'); });
+qs('#sidebar-overlay').addEventListener('click', closeSidebar);
+document.addEventListener('click', e=>{ if(e.target.id==='sb-close') closeSidebar(); });
+qs('#floating-cart').addEventListener('click', ()=> navigate('/cart'));
+qs('#btn-search').addEventListener('click', ()=> navigate('/search'));
+
+/* newsletter */
+qs('#newsletter-btn').addEventListener('click', ()=>{
+  const inp = qs('#newsletter-email');
+  if(inp.value && inp.value.includes('@')){ toast('Subscribed! Welcome to the house.'); inp.value=''; }
+  else toast('Enter a valid email address');
+});
+
+/* modal helpers */
+function openModal(html){ qs('#modal-content').innerHTML = html; qs('#modal-overlay').classList.add('open'); }
+function closeModal(){ qs('#modal-overlay').classList.remove('open'); }
+qs('#modal-overlay').addEventListener('click', e=>{ if(e.target.id==='modal-overlay') closeModal(); });
+document.addEventListener('click', e=>{ if(e.target.closest('[data-close-modal]')) closeModal(); });
+
+buildNav();
+
+/* =========================================================
+   SHARED COMPONENT RENDERERS
+   ========================================================= */
+function starsHTML(rating){
+  const full = Math.round(rating);
+  return `<span class="stars">${'★'.repeat(full)}${'☆'.repeat(5-full)}</span> <span style="color:var(--text-soft);font-size:.78rem;">${rating}</span>`;
+}
+
+function productCardHTML(p, mode='grid'){
+  const price = priceAfterDiscount(p);
+  const inWish = state.wishlist.includes(p.id);
+  return `
+  <div class="card product-card" data-pid="${p.id}" style="position:relative;">
+    ${p.discount ? `<span class="pc-discount">-${p.discount}%</span>` : ''}
+    <button class="pc-wish ${inWish?'active':''}" data-wish="${p.id}" title="Wishlist">${inWish?'♥':'♡'}</button>
+    <div data-goto="${p.id}">${placeholderImg(p)}</div>
+    <div class="pc-body">
+      <span class="pc-cat">${p.category}</span>
+      <span class="pc-name" data-goto="${p.id}">${esc(p.name)}</span>
+      <div>${starsHTML(p.rating)} <span style="color:var(--text-soft);font-size:.76rem;">(${p.reviews})</span></div>
+      <div class="pc-price">
+        <span class="now">${fmtMoney(price)}</span>
+        ${p.discount ? `<span class="was">${fmtMoney(p.price)}</span>`:''}
+      </div>
+      ${p.stock===0 ? `<span style="color:#A12626;font-size:.74rem;font-weight:700;">Out of stock</span>` : `<button class="btn btn-dark btn-sm" data-quickadd="${p.id}" style="margin-top:8px;">Add to Bag</button>`}
+    </div>
+  </div>`;
+}
+
+function attachProductCardEvents(container){
+  qsa('[data-goto]', container).forEach(el=> el.addEventListener('click', ()=> navigate('/product?id='+el.dataset.goto)));
+  qsa('[data-wish]', container).forEach(el=> el.addEventListener('click', (e)=>{ e.stopPropagation(); toggleWishlist(el.dataset.wish); render(location.pathname+location.search); }));
+  qsa('[data-quickadd]', container).forEach(el=> el.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const p = productById(el.dataset.quickadd);
+    addToCart(p.id, p.sizes[0], p.colors[0].name, 1);
+  }));
+}
+
+function productGridHTML(list, view='grid'){
+  if(list.length===0) return `<div class="empty-state"><div class="glyph">🔎</div><h3>No products found</h3><p class="lead">Try adjusting your filters or search terms.</p></div>`;
+  return `<div class="${view==='grid'?'product-grid':'product-list'} stagger">${list.map(p=>productCardHTML(p,view)).join('')}</div>`;
+}
+
+/* =========================================================
+   CART LOGIC
+   ========================================================= */
+function addToCart(productId, size, color, qty=1){
+  const existing = state.cart.find(c=>c.productId===productId && c.size===size && c.color===color);
+  if(existing) existing.qty += qty;
+  else state.cart.push({productId, size, color, qty});
+  saveState(); updateHeaderUI(); bumpCart();
+  toast('Added to bag');
+}
+function removeFromCart(idx){ state.cart.splice(idx,1); saveState(); updateHeaderUI(); render(location.pathname); toast('Removed from bag'); }
+function changeCartQty(idx, delta){
+  state.cart[idx].qty = clamp(state.cart[idx].qty+delta,1,99);
+  saveState(); render(location.pathname);
+}
+function cartLines(){
+  return state.cart.map(c=>({...c, product: productById(c.productId)})).filter(c=>c.product);
+}
+function cartSubtotal(){ return cartLines().reduce((s,c)=>s+priceAfterDiscount(c.product)*c.qty,0); }
+function shippingFee(){ const sub=cartSubtotal(); return sub===0 ? 0 : (sub>500?0:18); }
+function taxAmount(){ return +(cartSubtotal()*0.06).toFixed(2); }
+function couponDiscount(){
+  if(!state.couponApplied) return 0;
+  if(state.couponApplied==='AZURE10') return +(cartSubtotal()*0.10).toFixed(2);
+  if(state.couponApplied==='AZURE20') return +(cartSubtotal()*0.20).toFixed(2);
+  return 0;
+}
+function cartTotal(){ return Math.max(0, cartSubtotal() + shippingFee() + taxAmount() - couponDiscount()); }
+
+/* =========================================================
+   WISHLIST LOGIC
+   ========================================================= */
+function toggleWishlist(id){
+  const i = state.wishlist.indexOf(id);
+  if(i>-1){ state.wishlist.splice(i,1); toast('Removed from wishlist'); }
+  else { state.wishlist.push(id); toast('Added to wishlist'); }
+  saveState(); updateHeaderUI();
+}
+
+/* =========================================================
+   WALLET LOGIC
+   ========================================================= */
+function walletTopUp(amount){
+  state.wallet.balance = +(state.wallet.balance + amount).toFixed(2);
+  state.wallet.transactions.unshift({id:uid('TXN'), type:'credit', label:'Top Up', amount, date:new Date().toISOString()});
+  saveState();
+}
+function walletSpend(amount, label){
+  state.wallet.balance = +(state.wallet.balance - amount).toFixed(2);
+  state.wallet.transactions.unshift({id:uid('TXN'), type:'debit', label, amount, date:new Date().toISOString()});
+  saveState();
+}
+
+/* =========================================================
+   LOYALTY LOGIC
+   ========================================================= */
+const TIERS = [
+  {name:'Silver', min:0, perks:['1 pt per RM1','Birthday gift','Member pricing']},
+  {name:'Gold', min:500, perks:['1.2x points','Free shipping','Early access']},
+  {name:'Platinum', min:1500, perks:['1.5x points','Priority support','Seasonal gifting']},
+  {name:'Diamond', min:3000, perks:['2x points','Personal stylist','VIP events']},
+];
+function tierForPoints(pts){
+  let t = TIERS[0];
+  TIERS.forEach(tier=>{ if(pts>=tier.min) t=tier; });
+  return t;
+}
+function nextTier(pts){
+  const idx = TIERS.findIndex(t=>t.name===tierForPoints(pts).name);
+  return TIERS[idx+1] || null;
+}
+function earnPoints(amountSpent, label){
+  const pts = Math.floor(amountSpent);
+  state.loyalty.points += pts;
+  state.loyalty.tier = tierForPoints(state.loyalty.points).name;
+  state.loyalty.history.unshift({label: label||'Order purchase', points:pts, date:new Date().toISOString()});
+  saveState();
+}
+
+/* =========================================================
+   PAGE: HOME
+   ========================================================= */
+renderers.home = function(){
+  const featured = PRODUCTS.slice(0,8);
+  const trending = PRODUCTS.filter(p=>p.bestseller).slice(0,8);
+  const newArrivals = PRODUCTS.filter(p=>p.new).slice(0,8);
+  const bestSellers = PRODUCTS.slice().sort((a,b)=>b.reviews-a.reviews).slice(0,8);
+
+  qs('#app').innerHTML = `
+  <section class="hero">
+    <div class="hero-bg-shape"></div>
+    <div class="hero-bg-shape b"></div>
+    <div class="wrap hero-grid">
+      <div class="fade-up">
+        <span class="pill">New Season — Atelier 2026</span>
+        <h1 class="hero-title">Quiet luxury,<br>made to <em>last</em>.</h1>
+        <p class="lead" style="max-width:440px;">Azure Atelier crafts considered essentials in small batches — pared-back silhouettes, honest materials, and a palette built around a single signature blue.</p>
+        <div class="hero-cta">
+          <a href="/shop" data-link class="btn btn-primary">Shop the Collection</a>
+          <a href="/about" data-link class="btn btn-outline">Our Story</a>
+        </div>
+      </div>
+      <div class="hero-visual fade-up" style="animation-delay:.1s;">
+        ${placeholderImg({icon:'👗'})}
+        <div class="hero-stats-float">
+          <div><div class="n" id="home-stat-skus">0</div><div class="l">Products</div></div>
+          <div><div class="n" id="home-stat-cust">0</div><div class="l">Members</div></div>
+          <div><div class="n" id="home-stat-rate">0</div><div class="l">Avg Rating</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="flash-banner fade-up">
+      <div>
+        <span class="pill" style="background:rgba(255,255,255,.16);color:#fff;">Flash Sale</span>
+        <h2 style="color:#fff;margin-top:10px;font-size:1.8rem;">Up to 30% off select styles</h2>
+        <p style="color:#BFE6FF;margin-top:6px;">Ends when the countdown hits zero.</p>
+      </div>
+      <div class="countdown-box" id="countdown-box"></div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><h2>Featured Collection</h2><a href="/shop" data-link class="btn btn-ghost btn-sm">View All →</a></div>
+    <div class="scroller">${featured.map(p=>`<div style="width:260px;">${productCardHTML(p)}</div>`).join('')}</div>
+  </section>
+
+  <section class="section wrap" style="background:var(--silver);border-radius:var(--r-lg);padding:60px 40px;">
+    <div class="section-head"><h2>Trending Now</h2><a href="/shop?sort=popular" data-link class="btn btn-ghost btn-sm">Explore →</a></div>
+    <div class="product-grid stagger">${trending.map(p=>productCardHTML(p)).join('')}</div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><h2>New Arrivals</h2><a href="/shop?sort=newest" data-link class="btn btn-ghost btn-sm">View All →</a></div>
+    <div class="scroller">${newArrivals.map(p=>`<div style="width:260px;">${productCardHTML(p)}</div>`).join('')}</div>
+  </section>
+
+  <section class="section wrap">
+    <div class="story-split">
+      <div class="fade-up">${placeholderImg({icon:'🧵'},'aspect-ratio:4/3;border-radius:28px;')}</div>
+      <div class="fade-up">
+        <span class="eyebrow">Brand Story</span>
+        <h2 style="margin:14px 0 18px;font-size:2rem;">Founded on restraint</h2>
+        <p class="lead">Azure Atelier began with a single idea: clothing should feel quieter than the world around it. Every piece is developed over multiple seasons, tested for comfort and longevity, and released only when it earns its place in the collection.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><h2>Best Sellers</h2><a href="/shop?sort=popular" data-link class="btn btn-ghost btn-sm">Shop Now →</a></div>
+    <div class="product-grid stagger">${bestSellers.map(p=>productCardHTML(p)).join('')}</div>
+  </section>
+
+  <section class="section wrap">
+    <div class="stats-band">
+      <div><div class="num" data-count="42000">0</div><div class="lab">Happy Clients</div></div>
+      <div><div class="num" data-count="${PRODUCTS.length}">0</div><div class="lab">Curated Products</div></div>
+      <div><div class="num" data-count="58">0</div><div class="lab">Countries Shipped</div></div>
+      <div><div class="num" data-count="12">0</div><div class="lab">Years of Craft</div></div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><h2>What Members Say</h2></div>
+    <div class="scroller">
+      ${[
+        ['Hana R.','The fabric quality is unreal. My hoodie still looks new after a year.'],
+        ['Daniel K.','Checkout was effortless and the packaging felt genuinely premium.'],
+        ['Mei L.','Loyalty points actually add up to something. Redeemed for a free jacket!'],
+        ['Arif T.','Customer support helped me track my order in seconds.'],
+      ].map(([name,text])=>`
+        <div class="card testi-card" style="width:300px;flex:0 0 300px;">
+          <div class="stars">★★★★★</div>
+          <p class="lead">"${esc(text)}"</p>
+          <div class="who"><div class="avatar-dot">${name[0]}</div><div><strong style="font-size:.86rem;">${name}</strong><br><span style="font-size:.74rem;color:var(--text-soft);">Verified Member</span></div></div>
+        </div>`).join('')}
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><h2>From the Gallery</h2><span class="pill">@azureatelier</span></div>
+    <div class="insta-grid">${Array.from({length:6},(_,i)=>placeholderImg({icon:['👕','👜','👞','👗','🧥','⌚'][i]})).join('')}</div>
+  </section>
+
+  <section class="section wrap" style="max-width:640px;text-align:center;">
+    <span class="eyebrow">Stay In Touch</span>
+    <h2 style="margin:14px 0 16px;">Join the Azure List</h2>
+    <p class="lead">Early access to drops, members-only pricing, and styling notes — straight to your inbox.</p>
+    <div class="newsletter-row" style="margin-top:22px;max-width:420px;margin-inline:auto;">
+      <input type="email" id="home-newsletter" placeholder="Your email address" style="border:1.5px solid var(--line);background:var(--surface);color:var(--text);">
+      <button class="btn btn-primary" id="home-newsletter-btn">Subscribe</button>
+    </div>
+  </section>
+  `;
+
+  animateCounter(qs('#home-stat-skus'), PRODUCTS.length, 1200, '', '+');
+  animateCounter(qs('#home-stat-cust'), 42, 1200, '', 'K+');
+  animateCounter(qs('#home-stat-rate'), 49, 1200, '', '');
+  qsa('.stats-band .num').forEach(el=> animateCounter(el, +el.dataset.count, 1500, '', '+'));
+  qs('#home-newsletter-btn').addEventListener('click', ()=>{
+    const v = qs('#home-newsletter').value;
+    if(v && v.includes('@')){ toast('Subscribed! Welcome to the house.'); qs('#home-newsletter').value=''; } else toast('Enter a valid email');
+  });
+  attachProductCardEvents(qs('#app'));
+  startCountdown();
+};
+
+function startCountdown(){
+  const box = qs('#countdown-box');
+  if(!box) return;
+  let target = localStorage.getItem('azureFlashEnd');
+  if(!target || +target < Date.now()){ target = Date.now() + 1000*60*60*26; localStorage.setItem('azureFlashEnd', target); }
+  function tick(){
+    if(!qs('#countdown-box')) return;
+    const diff = Math.max(0, +target - Date.now());
+    const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+    qs('#countdown-box').innerHTML = [['H',h],['M',m],['S',s]].map(([l,v])=>`<div class="seg"><div class="num">${String(v).padStart(2,'0')}</div><div class="lab">${l}</div></div>`).join('');
+    if(diff>0) requestAnimationFrame(()=>setTimeout(tick,1000));
+  }
+  tick();
+}
+
+/* =========================================================
+   PAGE: CATEGORIES
+   ========================================================= */
+renderers.categories = function(){
+  qs('#app').innerHTML = `
+  <section class="page-hero wrap"><span class="eyebrow">Browse</span><h1>Shop by Category</h1><p class="lead" style="max-width:520px;margin:14px auto 0;">Nine curated categories, each developed with its own fabrication and fit logic.</p></section>
+  <section class="section wrap" style="padding-top:0;">
+    <div class="cat-grid stagger">
+      ${CATEGORIES.map(cat=>`
+        <div class="cat-tile card" data-cat="${cat}">
+          ${placeholderImg({icon:CATEGORY_ICONS[cat]})}
+          <div class="cat-label">${cat} <span style="font-size:.7rem;font-weight:400;opacity:.85;">(${PRODUCTS.filter(p=>p.category===cat).length})</span></div>
+        </div>`).join('')}
+    </div>
+  </section>`;
+  qsa('[data-cat]').forEach(el=> el.addEventListener('click', ()=> navigate('/shop?category='+encodeURIComponent(el.dataset.cat))));
+};
+
+/* =========================================================
+   PAGE: SHOP
+   ========================================================= */
+let shopView = 'grid';
+let shopPage = 1;
+renderers.shop = function(params){
+  const q = params.get('q') || '';
+  const cat = params.get('category');
+  const sort = params.get('sort') || 'newest';
+  const minP = +(params.get('min')||0);
+  const maxP = +(params.get('max')||1000);
+  const minRating = +(params.get('rating')||0);
+  const color = params.get('color');
+
+  let list = PRODUCTS.filter(p=>{
+    if(q && !p.name.toLowerCase().includes(q.toLowerCase()) && !p.category.toLowerCase().includes(q.toLowerCase())) return false;
+    if(cat && p.category!==cat) return false;
+    const price = priceAfterDiscount(p);
+    if(price<minP || price>maxP) return false;
+    if(p.rating < minRating) return false;
+    if(color && !p.colors.some(c=>c.name===color)) return false;
+    return true;
+  });
+
+  if(sort==='newest') list = list.slice().sort((a,b)=> (b.new?1:0)-(a.new?1:0));
+  if(sort==='priceLow') list = list.slice().sort((a,b)=>priceAfterDiscount(a)-priceAfterDiscount(b));
+  if(sort==='priceHigh') list = list.slice().sort((a,b)=>priceAfterDiscount(b)-priceAfterDiscount(a));
+  if(sort==='popular') list = list.slice().sort((a,b)=>b.reviews-a.reviews);
+
+  const perPage = 8;
+  const totalPages = Math.max(1, Math.ceil(list.length/perPage));
+  shopPage = clamp(shopPage,1,totalPages);
+  const pageItems = list.slice((shopPage-1)*perPage, shopPage*perPage);
+
+  qs('#app').innerHTML = `
+  <section class="shop-head wrap">
+    <span class="eyebrow">Shop</span>
+    <h1>${cat ? esc(cat) : 'All Products'}</h1>
+    <p class="lead">${list.length} products found</p>
+  </section>
+  <section class="section wrap" style="padding-top:0;">
+    <div class="shop-layout">
+      <aside class="filter-panel">
+        <h4>Category</h4>
+        <div class="chip-row">
+          <span class="chip ${!cat?'active':''}" data-filter-cat="">All</span>
+          ${CATEGORIES.map(c=>`<span class="chip ${cat===c?'active':''}" data-filter-cat="${c}">${c}</span>`).join('')}
+        </div>
+        <h4>Price Range (${fmtMoney(minP)} – ${fmtMoney(maxP)})</h4>
+        <div class="range-row">
+          <input type="range" id="price-min" min="0" max="1000" step="10" value="${minP}">
+        </div>
+        <div class="range-row">
+          <input type="range" id="price-max" min="0" max="1000" step="10" value="${maxP}">
+        </div>
+        <h4>Minimum Rating</h4>
+        <div class="chip-row">
+          ${[0,3,3.5,4,4.5].map(r=>`<span class="chip ${minRating===r?'active':''}" data-filter-rating="${r}">${r===0?'Any':r+'★'}</span>`).join('')}
+        </div>
+        <h4>Color</h4>
+        <div class="chip-row">
+          ${COLOR_SWATCHES.map(c=>`<span class="color-dot ${color===c.name?'active':''}" data-filter-color="${c.name}" style="background:${c.hex};border-color:${c.hex==='#FFFFFF'?'#ccc':'transparent'};" title="${c.name}"></span>`).join('')}
+        </div>
+        <h4>Size</h4>
+        <div class="chip-row">${['XS','S','M','L','XL','XXL'].map(s=>`<span class="chip" data-size-filter="${s}">${s}</span>`).join('')}</div>
+      </aside>
+      <div>
+        <div class="toolbar">
+          <div class="search-suggest-box" style="flex:1;max-width:320px;">
+            <input type="text" id="shop-search-input" class="field-inline" placeholder="Search products..." value="${esc(q)}" style="width:100%;padding:11px 16px;border-radius:100px;border:1.5px solid var(--line);background:var(--surface);">
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <select id="sort-select" style="padding:11px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);">
+              <option value="newest" ${sort==='newest'?'selected':''}>Newest</option>
+              <option value="priceLow" ${sort==='priceLow'?'selected':''}>Price: Low to High</option>
+              <option value="priceHigh" ${sort==='priceHigh'?'selected':''}>Price: High to Low</option>
+              <option value="popular" ${sort==='popular'?'selected':''}>Most Popular</option>
+            </select>
+            <div class="view-toggle">
+              <button data-view="grid" class="${shopView==='grid'?'active':''}">▦</button>
+              <button data-view="list" class="${shopView==='list'?'active':''}">☰</button>
+            </div>
+          </div>
+        </div>
+        <div id="shop-results">${productGridHTML(pageItems, shopView)}</div>
+        <div class="pagination">
+          ${Array.from({length:totalPages},(_,i)=>`<button class="${shopPage===i+1?'active':''}" data-page="${i+1}">${i+1}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+  </section>`;
+
+  attachProductCardEvents(qs('#app'));
+  function setParam(key,val){
+    const p = new URLSearchParams(location.search);
+    if(val===''||val==null) p.delete(key); else p.set(key,val);
+    navigate('/shop?'+p.toString());
+  }
+  qsa('[data-filter-cat]').forEach(el=> el.addEventListener('click', ()=> setParam('category', el.dataset.filterCat)));
+  qsa('[data-filter-rating]').forEach(el=> el.addEventListener('click', ()=> setParam('rating', el.dataset.filterRating)));
+  qsa('[data-filter-color]').forEach(el=> el.addEventListener('click', ()=> setParam('color', el.dataset.filterColor)));
+  qs('#price-min').addEventListener('change', e=> setParam('min', e.target.value));
+  qs('#price-max').addEventListener('change', e=> setParam('max', e.target.value));
+  qs('#sort-select').addEventListener('change', e=> setParam('sort', e.target.value));
+  qsa('[data-page]').forEach(el=> el.addEventListener('click', ()=>{ shopPage = +el.dataset.page; render(location.pathname+location.search); }));
+  qsa('[data-view]').forEach(el=> el.addEventListener('click', ()=>{ shopView = el.dataset.view; render(location.pathname+location.search); }));
+  const searchInput = qs('#shop-search-input');
+  searchInput.addEventListener('input', debounce(e=> setParam('q', e.target.value), 420));
+};
+
+/* =========================================================
+   PAGE: PRODUCT DETAIL
+   ========================================================= */
+let pdSelectedColor=null, pdSelectedSize=null, pdQty=1, pdTab='description', pdThumb=0;
+renderers.product = function(params){
+  const id = params.get('id');
+  const p = productById(id);
+  if(!p){ qs('#app').innerHTML = notFoundHTML(); return; }
+
+  // recently viewed
+  state.recentlyViewed = [id, ...state.recentlyViewed.filter(x=>x!==id)].slice(0,8);
+  saveState();
+
+  pdSelectedColor = p.colors[0].name; pdSelectedSize = p.sizes[Math.floor(p.sizes.length/2)]; pdQty=1; pdTab='description'; pdThumb=0;
+  const price = priceAfterDiscount(p);
+  const related = PRODUCTS.filter(r=>r.category===p.category && r.id!==p.id).slice(0,4);
+  const recentlyViewedProducts = state.recentlyViewed.map(productById).filter(x=>x && x.id!==p.id).slice(0,4);
+
+  function reviewsHTML(){
+    const names=['Aisha M.','Tom W.','Priya S.','Marcus L.','Yuki H.'];
+    return Array.from({length:5},(_,i)=>`
+      <div class="review-row">
+        <div class="avatar-dot">${names[i][0]}</div>
+        <div><strong style="font-size:.86rem;">${names[i]}</strong> ${starsHTML((4+ (i%2)*0.5))}<p class="lead" style="margin-top:6px;">Beautifully made — the ${p.category.toLowerCase().slice(0,-1)} fits exactly as described and the fabric feels even better in person.</p></div>
+      </div>`).join('');
+  }
+
+  function bodyHTML(){
+    return `
+    <section class="section wrap">
+      <div class="pd-layout">
+        <div>
+          <div class="pd-gallery-main card" id="pd-main-img">${placeholderImg(p)}</div>
+          <div class="pd-thumbs">
+            ${Array.from({length:4},(_,i)=>`<div class="th ${pdThumb===i?'active':''}" data-thumb="${i}">${placeholderImg(p)}</div>`).join('')}
+          </div>
+        </div>
+        <div class="pd-info fade-up">
+          <span class="pc-cat">${p.category}</span>
+          <h1>${esc(p.name)}</h1>
+          <div>${starsHTML(p.rating)} <span style="color:var(--text-soft);font-size:.8rem;">(${p.reviews} reviews)</span></div>
+          <div class="pd-price-row"><span class="now">${fmtMoney(price)}</span>${p.discount?`<span class="was">${fmtMoney(p.price)}</span><span class="pill">-${p.discount}%</span>`:''}</div>
+          <p class="lead">${esc(p.description)}</p>
+          <div>
+            <h4 style="font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-soft);margin:18px 0 8px;">Color: ${pdSelectedColor}</h4>
+            <div class="swatch-row">${p.colors.map(c=>`<span class="color-dot ${pdSelectedColor===c.name?'active':''}" data-color="${c.name}" style="background:${c.hex};border-color:${c.hex==='#FFFFFF'?'#ccc':'transparent'};" title="${c.name}"></span>`).join('')}</div>
+          </div>
+          <div>
+            <h4 style="font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-soft);margin:18px 0 8px;">Size: ${pdSelectedSize}</h4>
+            <div class="swatch-row">${p.sizes.map(s=>`<span class="size-box ${pdSelectedSize===s?'active':''}" data-size="${s}">${s}</span>`).join('')}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:18px;margin-top:20px;">
+            <div class="qty-stepper"><button data-qty="-1">−</button><span id="pd-qty">${pdQty}</span><button data-qty="1">+</button></div>
+            <span style="font-size:.8rem;color:${p.stock>0?'var(--text-soft)':'#A12626'};font-weight:600;">${p.stock>0? p.stock+' in stock' : 'Out of stock'}</span>
+          </div>
+          <div class="pd-actions">
+            <button class="btn btn-dark" id="pd-add" ${p.stock===0?'disabled':''}>Add to Bag</button>
+            <button class="btn btn-primary" id="pd-buy" ${p.stock===0?'disabled':''}>Buy Now</button>
+            <button class="btn btn-outline" id="pd-wish">${state.wishlist.includes(p.id)?'♥ Wishlisted':'♡ Wishlist'}</button>
+          </div>
+          <div class="pd-meta-row">
+            <span>🚚 Free shipping over RM500</span>
+            <span>↩ 30-day returns</span>
+            <span>🔒 Secure checkout</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-row">
+        <button class="tab-btn ${pdTab==='description'?'active':''}" data-tab="description">Description</button>
+        <button class="tab-btn ${pdTab==='reviews'?'active':''}" data-tab="reviews">Reviews (${p.reviews})</button>
+        <button class="tab-btn ${pdTab==='shipping'?'active':''}" data-tab="shipping">Shipping & Returns</button>
+      </div>
+      <div id="pd-tab-content">
+        ${pdTab==='description' ? `<p class="lead" style="max-width:700px;">${esc(p.description)} Composed of premium ${MATS[0].toLowerCase()} blends and finished with reinforced stitching, each piece passes a 12-point quality check before leaving the atelier.</p>` : ''}
+        ${pdTab==='reviews' ? `<div>${reviewsHTML()}</div>` : ''}
+        ${pdTab==='shipping' ? `<p class="lead" style="max-width:700px;">Orders ship within 1–2 business days. Standard delivery takes 3–6 business days; express options are available at checkout. Unworn items may be returned within 30 days for a full refund.</p>` : ''}
+      </div>
+
+      ${related.length? `<div class="section-head" style="margin-top:60px;"><h2>Related Products</h2></div><div class="product-grid stagger">${related.map(r=>productCardHTML(r)).join('')}</div>` : ''}
+      ${recentlyViewedProducts.length? `<div class="section-head" style="margin-top:60px;"><h2>Recently Viewed</h2></div><div class="product-grid stagger">${recentlyViewedProducts.map(r=>productCardHTML(r)).join('')}</div>` : ''}
+    </section>`;
+  }
+
+  qs('#app').innerHTML = bodyHTML();
+  wireProductPage(p);
+};
+
+function wireProductPage(p){
+  attachProductCardEvents(qs('#app'));
+  qs('#pd-main-img').addEventListener('click', (e)=> e.currentTarget.classList.toggle('zoomed'));
+  qsa('[data-thumb]').forEach(el=> el.addEventListener('click', ()=>{ pdThumb=+el.dataset.thumb; renderers.product(new URLSearchParams(location.search)); }));
+  qsa('[data-color]').forEach(el=> el.addEventListener('click', ()=>{ pdSelectedColor=el.dataset.color; renderers.product(new URLSearchParams(location.search)); }));
+  qsa('[data-size]').forEach(el=> el.addEventListener('click', ()=>{ pdSelectedSize=el.dataset.size; renderers.product(new URLSearchParams(location.search)); }));
+  qsa('[data-qty]').forEach(el=> el.addEventListener('click', ()=>{ pdQty=clamp(pdQty+(+el.dataset.qty),1,p.stock||99); qs('#pd-qty').textContent=pdQty; }));
+  qsa('.tab-btn').forEach(el=> el.addEventListener('click', ()=>{ pdTab=el.dataset.tab; renderers.product(new URLSearchParams(location.search)); }));
+  qs('#pd-add').addEventListener('click', ()=> addToCart(p.id, pdSelectedSize, pdSelectedColor, pdQty));
+  qs('#pd-buy').addEventListener('click', ()=>{ addToCart(p.id, pdSelectedSize, pdSelectedColor, pdQty); navigate('/checkout'); });
+  qs('#pd-wish').addEventListener('click', ()=>{ toggleWishlist(p.id); renderers.product(new URLSearchParams(location.search)); });
+}
+
+/* =========================================================
+   PAGE: SEARCH
+   ========================================================= */
+const TRENDING_SEARCHES = ['Hoodies','Denim','Sneakers','Silk Dress','Leather Bag','Tailored Jacket'];
+renderers.search = function(){
+  qs('#app').innerHTML = `
+  <section class="page-hero wrap">
+    <span class="eyebrow">Discover</span>
+    <h1>Search the Atelier</h1>
+    <div class="search-suggest-box" style="max-width:560px;margin:24px auto 0;">
+      <input type="text" id="search-main-input" placeholder="Search for products, categories..." style="width:100%;padding:16px 20px;border-radius:100px;border:1.5px solid var(--line);background:var(--surface);font-size:1rem;">
+      <div id="search-suggest-dd"></div>
+    </div>
+  </section>
+  <section class="section wrap" style="padding-top:0;">
+    <div class="row-2" style="max-width:760px;margin:0 auto 40px;">
+      <div>
+        <h4 style="font-size:.74rem;text-transform:uppercase;color:var(--text-soft);margin-bottom:10px;">Recent Searches</h4>
+        <div class="chip-row" id="recent-search-chips">${state.recentSearches.length? state.recentSearches.map(s=>`<span class="chip" data-go-search="${esc(s)}">${esc(s)}</span>`).join('') : '<span class="lead" style="font-size:.82rem;">No recent searches yet</span>'}</div>
+      </div>
+      <div>
+        <h4 style="font-size:.74rem;text-transform:uppercase;color:var(--text-soft);margin-bottom:10px;">Trending Searches</h4>
+        <div class="chip-row">${TRENDING_SEARCHES.map(s=>`<span class="chip" data-go-search="${s}">🔥 ${s}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div id="search-results"></div>
+  </section>`;
+
+  const input = qs('#search-main-input');
+  input.focus();
+  function doSearch(q){
+    if(!q){ qs('#search-results').innerHTML=''; return; }
+    const list = PRODUCTS.filter(p=> p.name.toLowerCase().includes(q.toLowerCase()) || p.category.toLowerCase().includes(q.toLowerCase()));
+    qs('#search-results').innerHTML = `<div class="section-head"><h2>${list.length} results for "${esc(q)}"</h2></div>${productGridHTML(list)}`;
+    attachProductCardEvents(qs('#search-results'));
+  }
+  input.addEventListener('input', debounce(e=>{
+    const q = e.target.value;
+    const dd = qs('#search-suggest-dd');
+    if(q.length>0){
+      const matches = PRODUCTS.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())).slice(0,5);
+      dd.innerHTML = matches.length? `<div class="suggest-dropdown">${matches.map(p=>`<div class="sg-item" data-go-product="${p.id}">${CATEGORY_ICONS[p.category]} ${esc(p.name)}</div>`).join('')}</div>` : '';
+      dd.querySelectorAll('[data-go-product]').forEach(el=> el.addEventListener('click', ()=> navigate('/product?id='+el.dataset.goProduct)));
+    } else dd.innerHTML='';
+    doSearch(q);
+  },280));
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Enter' && input.value){
+      state.recentSearches = [input.value, ...state.recentSearches.filter(s=>s!==input.value)].slice(0,6);
+      saveState();
+      doSearch(input.value);
+      qs('#search-suggest-dd').innerHTML='';
+    }
+  });
+  qsa('[data-go-search]').forEach(el=> el.addEventListener('click', ()=>{ input.value = el.dataset.goSearch; input.dispatchEvent(new Event('input')); doSearch(el.dataset.goSearch); }));
+};
+
+/* =========================================================
+   PAGE: WISHLIST
+   ========================================================= */
+renderers.wishlist = function(){
+  const items = state.wishlist.map(productById).filter(Boolean);
+  qs('#app').innerHTML = `
+  <section class="page-hero wrap"><span class="eyebrow">Saved</span><h1>Your Wishlist</h1><p class="lead">${items.length} item${items.length===1?'':'s'} saved</p></section>
+  <section class="section wrap" style="padding-top:0;">
+    ${items.length===0 ? `<div class="empty-state"><div class="glyph">♡</div><h3>Your wishlist is empty</h3><p class="lead">Save pieces you love and find them here anytime.</p><br><a href="/shop" data-link class="btn btn-primary">Browse Shop</a></div>`
+    : `<div class="product-grid stagger">${items.map(p=>productCardHTML(p)).join('')}</div>
+       <div style="text-align:center;margin-top:30px;"><button class="btn btn-dark" id="wish-move-all">Move All to Bag</button></div>`}
+  </section>`;
+  attachProductCardEvents(qs('#app'));
+  const moveBtn = qs('#wish-move-all');
+  if(moveBtn) moveBtn.addEventListener('click', ()=>{
+    items.forEach(p=>{ if(p.stock>0) addToCart(p.id, p.sizes[0], p.colors[0].name, 1); });
+    state.wishlist=[]; saveState(); navigate('/cart');
+  });
+};
+
+/* =========================================================
+   PAGE: CART
+   ========================================================= */
+renderers.cart = function(){
+  const lines = cartLines();
+  qs('#app').innerHTML = `
+  <section class="page-hero wrap"><span class="eyebrow">Your Bag</span><h1>Shopping Bag</h1><p class="lead">${lines.length} item${lines.length===1?'':'s'}</p></section>
+  <section class="section wrap" style="padding-top:0;">
+    ${lines.length===0 ? `<div class="empty-state"><div class="glyph">🛍</div><h3>Your bag is empty</h3><p class="lead">Add something beautiful to get started.</p><br><a href="/shop" data-link class="btn btn-primary">Continue Shopping</a></div>` : `
+    <div class="cart-layout">
+      <div>
+        ${lines.map((c,idx)=>`
+          <div class="cart-row">
+            ${placeholderImg(c.product)}
+            <div>
+              <strong>${esc(c.product.name)}</strong>
+              <div style="font-size:.78rem;color:var(--text-soft);margin-top:4px;">Color: ${c.color} · Size: ${c.size}</div>
+              <div class="cart-remove" data-remove="${idx}">Remove</div>
+            </div>
+            <div class="qty-stepper"><button data-dec="${idx}">−</button><span>${c.qty}</span><button data-inc="${idx}">+</button></div>
+            <strong>${fmtMoney(priceAfterDiscount(c.product)*c.qty)}</strong>
+          </div>`).join('')}
+        <a href="/shop" data-link class="btn btn-outline" style="margin-top:24px;">← Continue Shopping</a>
+      </div>
+      <div class="card summary-card">
+        <h3 style="margin-bottom:18px;">Order Summary</h3>
+        <div class="summary-line"><span>Subtotal</span><span>${fmtMoney(cartSubtotal())}</span></div>
+        <div class="summary-line"><span>Shipping</span><span>${shippingFee()===0?'Free':fmtMoney(shippingFee())}</span></div>
+        <div class="summary-line"><span>Tax (6%)</span><span>${fmtMoney(taxAmount())}</span></div>
+        ${state.couponApplied? `<div class="summary-line"><span>Coupon (${state.couponApplied})</span><span>-${fmtMoney(couponDiscount())}</span></div>`:''}
+        <div class="coupon-row">
+          <input type="text" id="coupon-input" placeholder="Coupon code (try AZURE10)">
+          <button class="btn btn-ghost btn-sm" id="coupon-apply">Apply</button>
+        </div>
+        <div class="summary-line total" id="cart-total-line"><span>Total</span><span id="cart-total-amt">${fmtMoney(cartTotal())}</span></div>
+        <button class="btn btn-primary btn-block" id="go-checkout" style="margin-top:14px;">Proceed to Checkout</button>
+      </div>
+    </div>`}
+  </section>`;
+
+  qsa('[data-remove]').forEach(el=> el.addEventListener('click', ()=> removeFromCart(+el.dataset.remove)));
+  qsa('[data-inc]').forEach(el=> el.addEventListener('click', ()=> changeCartQty(+el.dataset.inc,1)));
+  qsa('[data-dec]').forEach(el=> el.addEventListener('click', ()=> changeCartQty(+el.dataset.dec,-1)));
+  const applyBtn = qs('#coupon-apply');
+  if(applyBtn) applyBtn.addEventListener('click', ()=>{
+    const code = qs('#coupon-input').value.trim().toUpperCase();
+    if(code==='AZURE10' || code==='AZURE20'){ state.couponApplied=code; saveState(); toast('Coupon applied!'); render('/cart'); }
+    else toast('Invalid coupon code');
+  });
+  const goCheckout = qs('#go-checkout');
+  if(goCheckout) goCheckout.addEventListener('click', ()=> navigate('/checkout'));
+};
+
+/* =========================================================
+   PAGE: CHECKOUT
+   ========================================================= */
+let checkoutPayMethod = 'wallet';
+renderers.checkout = function(){
+  const lines = cartLines();
+  if(lines.length===0){
+    qs('#app').innerHTML = `<section class="section wrap"><div class="empty-state"><div class="glyph">🧺</div><h3>Your bag is empty</h3><p class="lead">Add items before checking out.</p><br><a href="/shop" data-link class="btn btn-primary">Browse Shop</a></div></section>`;
+    return;
+  }
+  const total = cartTotal();
+  qs('#app').innerHTML = `
+  <section class="section wrap">
+    <div class="checkout-steps">
+      <div class="step active">1. Shipping</div><div class="step active">2. Payment</div><div class="step active">3. Review</div>
+    </div>
+    <div class="cart-layout">
+      <div>
+        <div class="card" style="padding:26px;margin-bottom:24px;">
+          <h3 style="margin-bottom:18px;">Shipping Address</h3>
+          <div class="row-2">
+            <div class="field"><label>Full Name</label><input id="ship-name" value="${esc(state.profile.name)}"></div>
+            <div class="field"><label>Phone</label><input id="ship-phone" value="${esc(state.profile.phone)}"></div>
+          </div>
+          <div class="field"><label>Address</label><input id="ship-address" value="${esc(state.profile.address)}" placeholder="Street, City, Postcode"></div>
+          <h4 style="margin:18px 0 10px;font-size:.78rem;text-transform:uppercase;color:var(--text-soft);">Delivery Method</h4>
+          <div class="pay-option active" data-delivery="standard"><div class="radio"></div><div><strong>Standard Delivery</strong><div style="font-size:.78rem;color:var(--text-soft);">3–6 business days · Free over RM500</div></div></div>
+          <div class="pay-option" data-delivery="express"><div class="radio"></div><div><strong>Express Delivery</strong><div style="font-size:.78rem;color:var(--text-soft);">1–2 business days · +RM25</div></div></div>
+        </div>
+        <div class="card" style="padding:26px;">
+          <h3 style="margin-bottom:18px;">Payment Method</h3>
+          <div class="pay-option ${checkoutPayMethod==='wallet'?'active':''}" data-pay="wallet"><div class="radio"></div><div><strong>Azure Wallet</strong><div style="font-size:.78rem;color:var(--text-soft);">Balance: ${fmtMoney(state.wallet.balance)}</div></div></div>
+          <div class="pay-option ${checkoutPayMethod==='card'?'active':''}" data-pay="card"><div class="radio"></div><div><strong>Credit / Debit Card</strong><div style="font-size:.78rem;color:var(--text-soft);">Visa, Mastercard, Amex</div></div></div>
+          <div class="pay-option ${checkoutPayMethod==='cod'?'active':''}" data-pay="cod"><div class="radio"></div><div><strong>Cash on Delivery</strong><div style="font-size:.78rem;color:var(--text-soft);">Pay when your order arrives</div></div></div>
+          <div id="card-fields" style="display:${checkoutPayMethod==='card'?'block':'none'};margin-top:16px;">
+            <div class="field"><label>Card Number</label><input placeholder="4242 4242 4242 4242" maxlength="19"></div>
+            <div class="row-2"><div class="field"><label>Expiry</label><input placeholder="MM/YY"></div><div class="field"><label>CVC</label><input placeholder="123" maxlength="3"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card summary-card">
+        <h3 style="margin-bottom:18px;">Order Summary</h3>
+        ${lines.map(c=>`<div class="summary-line"><span>${esc(c.product.name)} ×${c.qty}</span><span>${fmtMoney(priceAfterDiscount(c.product)*c.qty)}</span></div>`).join('')}
+        <div class="divider"></div>
+        <div class="summary-line"><span>Subtotal</span><span>${fmtMoney(cartSubtotal())}</span></div>
+        <div class="summary-line"><span>Shipping</span><span id="ck-shipping">${shippingFee()===0?'Free':fmtMoney(shippingFee())}</span></div>
+        <div class="summary-line"><span>Tax</span><span>${fmtMoney(taxAmount())}</span></div>
+        ${state.couponApplied? `<div class="summary-line"><span>Coupon</span><span>-${fmtMoney(couponDiscount())}</span></div>`:''}
+        <div class="summary-line total" id="ck-total"><span>Total</span><span>${fmtMoney(total)}</span></div>
+        <button class="btn btn-primary btn-block" id="place-order" style="margin-top:16px;">Place Order</button>
+        <p style="font-size:.72rem;color:var(--text-soft);text-align:center;margin-top:10px;">By placing your order you agree to our <a href="/terms" data-link style="text-decoration:underline;">Terms</a>.</p>
+      </div>
+    </div>
+  </section>`;
+
+  let expressFee = 0;
+  qsa('[data-delivery]').forEach(el=> el.addEventListener('click', ()=>{
+    qsa('[data-delivery]').forEach(x=>x.classList.remove('active')); el.classList.add('active');
+    expressFee = el.dataset.delivery==='express' ? 25 : 0;
+    qs('#ck-shipping').textContent = fmtMoney(shippingFee()+expressFee);
+    qs('#ck-total').querySelector('span:last-child').textContent = fmtMoney(total+expressFee);
+  }));
+  qsa('[data-pay]').forEach(el=> el.addEventListener('click', ()=>{ checkoutPayMethod = el.dataset.pay; render('/checkout'); }));
+
+  qs('#place-order').addEventListener('click', ()=>{
+    const name = qs('#ship-name').value, addr = qs('#ship-address').value;
+    if(!name || !addr){ toast('Please complete your shipping address'); return; }
+    const finalTotal = +(total+expressFee).toFixed(2);
+    if(checkoutPayMethod==='wallet' && state.wallet.balance < finalTotal){ toast('Insufficient wallet balance'); return; }
+
+    const orderId = uid('ORD');
+    const order = {
+      id: orderId,
+      items: lines.map(l=>({name:l.product.name, qty:l.qty, price:priceAfterDiscount(l.product), color:l.color, size:l.size})),
+      total: finalTotal,
+      status: 'Processing',
+      date: new Date().toISOString(),
+      address: addr,
+      payment: checkoutPayMethod,
+      eta: new Date(Date.now()+1000*60*60*24*4).toISOString(),
+    };
+    state.orders.unshift(order);
+    if(checkoutPayMethod==='wallet') walletSpend(finalTotal, 'Order '+orderId);
+    earnPoints(finalTotal, 'Order '+orderId);
+    state.profile.name = name; state.profile.address = addr;
+    state.cart = []; state.couponApplied = null;
+    saveState(); updateHeaderUI();
+
+    qs('#app').innerHTML = `
+    <section class="section wrap">
+      <div class="card order-success scale-in">
+        <div class="check-ring">✓</div>
+        <h2>Order Confirmed!</h2>
+        <p class="lead" style="margin:10px 0 6px;">Order ID: <strong>${orderId}</strong></p>
+        <p class="lead">You earned <strong>${Math.floor(finalTotal)} points</strong> toward your loyalty tier.</p>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;">
+          <a href="/orders" data-link class="btn btn-primary">View Orders</a>
+          <a href="/shop" data-link class="btn btn-outline">Continue Shopping</a>
+        </div>
+      </div>
+    </section>`;
+    fireConfetti();
+  });
+};
+
+/* =========================================================
+   PAGE: WALLET
+   ========================================================= */
+renderers.wallet = function(){
+  qs('#app').innerHTML = `
+  <section class="section wrap">
+    <span class="eyebrow">Azure Pay</span>
+    <h1 style="margin-bottom:24px;">Your Wallet</h1>
+    <div class="wallet-card fade-up">
+      <div class="bal-label">Available Balance</div>
+      <div class="bal-num" id="wallet-bal-num">${fmtMoney(0)}</div>
+      <div style="display:flex;gap:12px;position:relative;z-index:1;">
+        <a href="/topup" data-link class="btn btn-primary btn-sm">+ Top Up</a>
+        <a href="/shop" data-link class="btn btn-outline" style="border-color:rgba(255,255,255,.4);color:#fff;">Spend in Shop</a>
+      </div>
+    </div>
+    <div class="section-head" style="margin-top:46px;"><h2>Transaction History</h2></div>
+    <div class="card" style="padding:10px 26px;">
+      ${state.wallet.transactions.length===0 ? `<p class="lead" style="padding:30px 0;">No transactions yet.</p>` :
+        state.wallet.transactions.map(t=>`
+        <div class="txn-row">
+          <div style="display:flex;align-items:center;"><span class="ic">${t.type==='credit'?'⬇':'⬆'}</span><div><strong style="font-size:.88rem;">${esc(t.label)}</strong><div style="font-size:.74rem;color:var(--text-soft);">${new Date(t.date).toLocaleString()}</div></div></div>
+          <span class="txn-amt ${t.type==='credit'?'pos':'neg'}">${t.type==='credit'?'+':'-'}${fmtMoney(t.amount)}</span>
+        </div>`).join('')}
+    </div>
+  </section>`;
+  animateCounter(qs('#wallet-bal-num'), Math.round(state.wallet.balance), 1100, (state.settings.currency==='USD'?'$':'RM'),'');
+};
+
+/* =========================================================
+   PAGE: TOP UP
+   ========================================================= */
+let topupSelected = null;
+renderers.topup = function(){
+  topupSelected = null;
+  qs('#app').innerHTML = `
+  <section class="section wrap" style="max-width:560px;">
+    <span class="eyebrow">Azure Pay</span>
+    <h1 style="margin-bottom:8px;">Top Up Wallet</h1>
+    <p class="lead">Current balance: ${fmtMoney(state.wallet.balance)}</p>
+    <div class="topup-grid">
+      ${[20,50,100,200,500].map(a=>`<div class="topup-amt" data-amt="${a}">RM${a}</div>`).join('')}
+    </div>
+    <div class="field"><label>Or enter custom amount</label><input type="number" id="custom-amt" placeholder="e.g. 75"></div>
+    <button class="btn btn-primary btn-block" id="confirm-topup" style="margin-top:8px;">Confirm Top Up</button>
+  </section>`;
+  qsa('[data-amt]').forEach(el=> el.addEventListener('click', ()=>{
+    qsa('[data-amt]').forEach(x=>x.classList.remove('active')); el.classList.add('active');
+    topupSelected = +el.dataset.amt; qs('#custom-amt').value='';
+  }));
+  qs('#custom-amt').addEventListener('input', e=>{ topupSelected = +e.target.value||null; qsa('[data-amt]').forEach(x=>x.classList.remove('active')); });
+  qs('#confirm-topup').addEventListener('click', ()=>{
+    if(!topupSelected || topupSelected<=0){ toast('Select or enter a valid amount'); return; }
+    walletTopUp(topupSelected);
+    toast(`Wallet topped up with ${fmtMoney(topupSelected)}`);
+    navigate('/wallet');
+  });
+};
+
+/* =========================================================
+   PAGE: LOYALTY LOGIN
+   ========================================================= */
+renderers.loyaltyLogin = function(){
+  if(state.loyalty.loggedIn){ navigate('/loyalty-dashboard'); return; }
+  qs('#app').innerHTML = `
+  <section class="section wrap loyalty-login-wrap">
+    <div class="card" style="padding:40px;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div class="mark" style="width:54px;height:54px;margin:0 auto 14px;"></div>
+        <h2>Member Login</h2>
+        <p class="lead">Sign in to view your loyalty dashboard</p>
+      </div>
+      <div class="field"><label>Email</label><input id="lg-email" placeholder="member@azureatelier.com"></div>
+      <div class="field"><label>Password</label><input id="lg-pass" type="password" placeholder="Luxury123"></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-soft);margin-bottom:18px;cursor:pointer;">
+        <input type="checkbox" id="lg-remember"> Remember me
+      </label>
+      <button class="btn btn-primary btn-block" id="lg-submit">Login</button>
+      <p style="font-size:.76rem;color:var(--text-soft);text-align:center;margin-top:16px;">Demo credentials: member@azureatelier.com / Luxury123</p>
+    </div>
+  </section>`;
+  qs('#lg-submit').addEventListener('click', ()=>{
+    const email = qs('#lg-email').value.trim(), pass = qs('#lg-pass').value;
+    if(email==='member@azureatelier.com' && pass==='Luxury123'){
+      state.loyalty.loggedIn = true; state.loyalty.remember = qs('#lg-remember').checked;
+      saveState(); toast('Welcome back!'); navigate('/loyalty-dashboard');
+    } else toast('Invalid email or password');
+  });
+};
+
+/* =========================================================
+   PAGE: LOYALTY DASHBOARD
+   ========================================================= */
+renderers.loyaltyDashboard = function(){
+  if(!state.loyalty.loggedIn){ navigate('/loyalty-login'); return; }
+  const tier = tierForPoints(state.loyalty.points);
+  const next = nextTier(state.loyalty.points);
+  const progressPct = next ? clamp(((state.loyalty.points - tier.min)/(next.min - tier.min))*100,0,100) : 100;
+
+  qs('#app').innerHTML = `
+  <section class="section wrap">
+    <div class="section-head">
+      <div><span class="eyebrow">Loyalty</span><h1>Welcome, ${esc(state.profile.name)}</h1></div>
+      <button class="btn btn-outline btn-sm" id="loyalty-logout">Log Out</button>
+    </div>
+    <div class="dash-grid">
+      <div>
+        <div class="card" style="padding:30px;margin-bottom:24px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><div class="eyebrow">Current Tier</div><h2 style="margin-top:6px;">${tier.name}</h2></div>
+            <div style="text-align:right;"><div class="eyebrow">Points Balance</div><h2 style="margin-top:6px;" id="loy-points">0</h2></div>
+          </div>
+          <div class="points-progress"><div class="fill" id="loy-fill" style="width:0%;"></div></div>
+          <p style="font-size:.8rem;color:var(--text-soft);">${next ? `${next.min - state.loyalty.points} points to ${next.name}` : "You've reached the highest tier!"}</p>
+        </div>
+        <div class="section-head"><h2 style="font-size:1.3rem;">Membership Tiers</h2></div>
+        <div class="tier-grid">
+          ${TIERS.map(t=>`
+            <div class="tier-card ${t.name.toLowerCase()} ${t.name===tier.name?'current':''}">
+              <h3 style="font-size:1rem;">${t.name}</h3>
+              <p style="font-size:.7rem;color:var(--text-soft);margin:6px 0 12px;">From ${t.min} pts</p>
+              <ul style="text-align:left;font-size:.74rem;color:var(--text-soft);display:flex;flex-direction:column;gap:6px;">${t.perks.map(p=>`<li>✓ ${p}</li>`).join('')}</ul>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div>
+        <div class="card" style="padding:26px;">
+          <h3 style="margin-bottom:16px;">Points History</h3>
+          ${state.loyalty.history.slice(0,8).map(h=>`
+            <div class="txn-row"><div><strong style="font-size:.86rem;">${esc(h.label)}</strong><div style="font-size:.74rem;color:var(--text-soft);">${new Date(h.date).toLocaleDateString()}</div></div><span class="txn-amt pos">+${h.points} pts</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </section>`;
+  animateCounter(qs('#loy-points'), state.loyalty.points, 1100);
+  setTimeout(()=>{ qs('#loy-fill').style.width = progressPct+'%'; }, 80);
+  qs('#loyalty-logout').addEventListener('click', ()=>{ state.loyalty.loggedIn=false; saveState(); navigate('/loyalty-login'); });
+};
+
+/* =========================================================
+   PAGE: ORDERS
+   ========================================================= */
+renderers.orders = function(){
+  const orders = state.orders;
+  qs('#app').innerHTML = `
+  <section class="section wrap">
+    <span class="eyebrow">Account</span><h1 style="margin-bottom:24px;">Your Orders</h1>
+    ${orders.length===0 ? `<div class="empty-state"><div class="glyph">📦</div><h3>No orders yet</h3><p class="lead">Your order history will appear here once you make a purchase.</p><br><a href="/shop" data-link class="btn btn-primary">Start Shopping</a></div>` :
+    orders.map(o=>`
+      <div class="card order-card">
+        <div class="order-card-head">
+          <div><strong>${o.id}</strong><div style="font-size:.78rem;color:var(--text-soft);">${new Date(o.date).toLocaleString()}</div></div>
+          <span class="status ${o.status.toLowerCase()}">${o.status}</span>
+        </div>
+        <div style="font-size:.84rem;color:var(--text-soft);">${o.items.map(i=>`${i.qty}× ${esc(i.name)}`).join(', ')}</div>
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <strong>${fmtMoney(o.total)}</strong>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-outline btn-sm" data-track="${o.id}">Track Order</button>
+            <button class="btn btn-ghost btn-sm" data-invoice="${o.id}">View Invoice</button>
+          </div>
+        </div>
+      </div>`).join('')}
+  </section>`;
+  qsa('[data-track]').forEach(el=> el.addEventListener('click', ()=> navigate('/order-tracking?id='+el.dataset.track)));
+  qsa('[data-invoice]').forEach(el=> el.addEventListener('click', ()=>{
+    const o = state.orders.find(x=>x.id===el.dataset.invoice);
+    openModal(`
+      <h3 style="margin-bottom:16px;">Invoice — ${o.id}</h3>
+      ${o.items.map(i=>`<div class="summary-line"><span>${esc(i.name)} ×${i.qty}</span><span>${fmtMoney(i.price*i.qty)}</span></div>`).join('')}
+      <div class="summary-line total"><span>Total</span><span>${fmtMoney(o.total)}</span></div>
+      <p style="font-size:.78rem;color:var(--text-soft);margin-top:14px;">Paid via ${o.payment==='wallet'?'Azure Wallet':o.payment==='card'?'Credit Card':'Cash on Delivery'}</p>
+      <button class="btn btn-dark btn-block" style="margin-top:18px;" data-close-modal>Close</button>`);
+  }));
+};
+
+/* =========================================================
+   PAGE: ORDER TRACKING
+   ========================================================= */
+renderers.orderTracking = function(params){
+  const id = params.get('id');
+  const order = state.orders.find(o=>o.id===id) || state.orders[0];
+  if(!order){
+    qs('#app').innerHTML = `<section class="section wrap"><div class="empty-state"><div class="glyph">📦</div><h3>No order to track</h3><a href="/shop" data-link class="btn btn-primary">Shop Now</a></div></section>`;
+    return;
+  }
+  const steps = ['Order Placed','Processing','Shipped','Out for Delivery','Delivered'];
+  const statusIdx = {'Processing':1,'Shipped':2,'Delivered':4}[order.status] ?? 1;
+  qs('#app').innerHTML = `
+  <section class="section wrap">
+    <span class="eyebrow">Tracking</span><h1>Order ${order.id}</h1>
+    <p class="lead">Estimated delivery: ${new Date(order.eta).toLocaleDateString()}</p>
+    <div class="card" style="padding:34px;margin-top:24px;">
+      <div class="timeline">
+        ${steps.map((s,i)=>`<div class="tl-step ${i<statusIdx?'done':''} ${i===statusIdx?'now':''}"><div class="tl-dot">${i<=statusIdx?'✓':''}</div><div class="tl-lab">${s}</div></div>`).join('')}
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:.86rem;color:var(--text-soft);">Shipping to: ${esc(order.address)}</p>
+    </div>
+    <div class="section-head" style="margin-top:40px;"><h2 style="font-size:1.2rem;">Items</h2></div>
+    <div class="card" style="padding:10px 24px;">
+      ${order.items.map(i=>`<div class="txn-row"><span>${i.qty}× ${esc(i.name)} (${i.color}, ${i.size})</span><strong>${fmtMoney(i.price*i.qty)}</strong></div>`).join('')}
+    </div>
+    <a href="/orders" data-link class="btn btn-outline" style="margin-top:24px;">← Back to Orders</a>
+  </section>`;
+};
+
+/* =========================================================
+   PAGE: PROFILE
+   ========================================================= */
+function accountNavHTML(active){
+  const links = [['/profile','Profile'],['/orders','Orders'],['/wishlist','Wishlist'],['/wallet','Wallet'],['/loyalty-dashboard','Loyalty'],['/settings','Settings']];
+  return `<div class="account-nav">${links.map(([h,l])=>`<a href="${h}" data-link class="${active===h?'active':''}">${l}</a>`).join('')}</div>`;
+}
+renderers.profile = function(){
+  const p = state.profile;
+  qs('#app').innerHTML = `
+  <section class="section wrap">
+    <span class="eyebrow">Account</span><h1 style="margin-bottom:24px;">My Profile</h1>
+    <div class="account-layout">
+      ${accountNavHTML('/profile')}
+      <div class="card" style="padding:32px;">
+        <div style="display:flex;align-items:center;gap:18px;margin-bottom:28px;">
+          <div class="avatar-big" style="background:linear-gradient(135deg,${p.avatarColor},var(--silver));">${esc(p.name[0]||'A')}</div>
+          <div>
+            <div class="chip-row">
+              ${['#8FD3FF','#5FB8EC','#9AA5AC','#0E2A3D'].map(c=>`<span class="accent-dot ${p.avatarColor===c?'active':''}" data-avatar-color="${c}" style="background:${c};"></span>`).join('')}
+            </div>
+            <p style="font-size:.76rem;color:var(--text-soft);margin-top:6px;">Choose avatar color</p>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label>Full Name</label><input id="pf-name" value="${esc(p.name)}"></div>
+          <div class="field"><label>Email</label><input id="pf-email" value="${esc(p.email)}" type="email"></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label>Phone</label><input id="pf-phone" value="${esc(p.phone)}"></div>
+          <div class="field"><label>Birthday</label><input id="pf-bday" value="${esc(p.birthday)}" type="date"></div>
+        </div>
+        <div class="field"><label>Address</label><input id="pf-address" value="${esc(p.address)}"></div>
+        <button class="btn btn-primary" id="pf-save">Save Changes</button>
+      </div>
+    </div>
+  </section>`;
+  qsa('[data-avatar-color]').forEach(el=> el.addEventListener('click', ()=>{ state.profile.avatarColor = el.dataset.avatarColor; saveState(); render('/profile'); }));
+  qs('#pf-save').addEventListener('click', ()=>{
+    state.profile.name = qs('#pf-name').value;
+    state.profile.email = qs('#pf-email').value;
+    state.profile.phone = qs('#pf-phone').value;
+    state.profile.birthday = qs('#pf-bday').value;
+    state.profile.address = qs('#pf-address').value;
+    saveState(); toast('Profile updated'); render('/profile');
+  });
+};
+
+/* =========================================================
+   PAGE: SETTINGS
+   ========================================================= */
+renderers.settings = function(){
+  const s = state.settings;
+  qs('#app').innerHTML = `
+  <section class="section wrap">
+    <span class="eyebrow">Account</span><h1 style="margin-bottom:24px;">Settings</h1>
+    <div class="account-layout">
+      ${accountNavHTML('/settings')}
+      <div class="card" style="padding:32px;">
+        <div class="settings-row">
+          <div><strong>Theme</strong><div style="font-size:.78rem;color:var(--text-soft);">Switch between light and dark mode</div></div>
+          <div class="toggle ${s.theme==='dark'?'on':''}" id="theme-toggle"></div>
+        </div>
+        <div class="settings-row">
+          <div><strong>Accent Color</strong><div style="font-size:.78rem;color:var(--text-soft);">Personalize the interface accent</div></div>
+          <div class="chip-row">${['#8FD3FF','#5FB8EC','#9AA5AC','#0E2A3D'].map(c=>`<span class="accent-dot ${s.accent===c?'active':''}" data-accent="${c}" style="background:${c};"></span>`).join('')}</div>
+        </div>
+        <div class="settings-row">
+          <div><strong>Currency</strong><div style="font-size:.78rem;color:var(--text-soft);">Display prices in your preferred currency</div></div>
+          <select id="currency-select"><option value="RM" ${s.currency==='RM'?'selected':''}>RM (Ringgit)</option><option value="USD" ${s.currency==='USD'?'selected':''}>USD (Dollar)</option></select>
+        </div>
+        <div class="settings-row">
+          <div><strong>Language</strong><div style="font-size:.78rem;color:var(--text-soft);">Interface language</div></div>
+          <select id="lang-select"><option value="en" ${s.language==='en'?'selected':''}>English</option><option value="ms" ${s.language==='ms'?'selected':''}>Bahasa Melayu</option></select>
+        </div>
+        <div class="settings-row">
+          <div><strong>Notifications</strong><div style="font-size:.78rem;color:var(--text-soft);">Order updates and promotions</div></div>
+          <div class="toggle ${s.notifications?'on':''}" id="notif-toggle"></div>
+        </div>
+        <div class="settings-row" style="border-bottom:none;">
+          <div><strong style="color:#A12626;">Reset All Data</strong><div style="font-size:.78rem;color:var(--text-soft);">Clears cart, orders, wallet, and profile</div></div>
+          <button class="btn btn-outline btn-sm" id="reset-data" style="border-color:#A12626;color:#A12626;">Reset</button>
+        </div>
+      </div>
+    </div>
+  </section>`;
+  qs('#theme-toggle').addEventListener('click', ()=>{
+    state.settings.theme = state.settings.theme==='dark' ? 'light' : 'dark';
+    applyTheme(); saveState(); render('/settings');
+  });
+  qs('#notif-toggle').addEventListener('click', ()=>{
+    state.settings.notifications = !state.settings.notifications; saveState(); render('/settings');
+    toast('Notifications '+(state.settings.notifications?'enabled':'disabled'));
+  });
+  qsa('[data-accent]').forEach(el=> el.addEventListener('click', ()=>{
+    state.settings.accent = el.dataset.accent; applyAccent(); saveState(); render('/settings');
+  }));
+  qs('#currency-select').addEventListener('change', e=>{ state.settings.currency = e.target.value; saveState(); toast('Currency updated'); render('/settings'); });
+  qs('#lang-select').addEventListener('change', e=>{ state.settings.language = e.target.value; saveState(); toast('Language preference saved'); });
+  qs('#reset-data').addEventListener('click', ()=>{
+    openModal(`<h3>Reset all data?</h3><p class="lead" style="margin:12px 0 20px;">This clears your cart, wishlist, wallet, orders, and profile. This cannot be undone.</p>
+      <div style="display:flex;gap:10px;"><button class="btn btn-outline btn-block" data-close-modal>Cancel</button><button class="btn btn-dark btn-block" id="confirm-reset" style="background:#A12626;">Reset</button></div>`);
+    qs('#confirm-reset').addEventListener('click', ()=>{
+      localStorage.removeItem(LS_KEY); state = defaultState(); saveState();
+      closeModal(); toast('All data has been reset'); applyTheme(); applyAccent(); updateHeaderUI(); navigate('/');
+    });
+  });
+};
+
+function applyTheme(){ document.documentElement.setAttribute('data-theme', state.settings.theme); }
+function applyAccent(){ document.documentElement.style.setProperty('--accent', state.settings.accent); document.documentElement.style.setProperty('--azure', state.settings.accent); }
+
+/* =========================================================
+   PAGE: ABOUT
+   ========================================================= */
+renderers.about = function(){
+  qs('#app').innerHTML = `
+  <section class="page-hero wrap"><span class="eyebrow">Our Story</span><h1>Crafted in quiet conviction</h1><p class="lead" style="max-width:560px;margin:14px auto 0;">Azure Atelier was founded on the belief that true luxury whispers rather than shouts.</p></section>
+  <section class="section wrap" style="padding-top:0;">
+    <div class="story-split">
+      <div class="fade-up">${placeholderImg({icon:'🧵'},'aspect-ratio:4/3;border-radius:28px;')}</div>
+      <div class="fade-up">
+        <span class="eyebrow">Mission</span>
+        <h2 style="margin:14px 0 16px;font-size:1.8rem;">Garments that earn their place</h2>
+        <p class="lead">We design for the long season, not the next one. Every silhouette is tested, refined, and released only when it meets our own bar for comfort, construction, and quiet beauty.</p>
+      </div>
+    </div>
+    <div class="story-split" style="margin-top:70px;">
+      <div class="fade-up" style="order:2;">${placeholderImg({icon:'🌿'},'aspect-ratio:4/3;border-radius:28px;')}</div>
+      <div class="fade-up" style="order:1;">
+        <span class="eyebrow">Vision</span>
+        <h2 style="margin:14px 0 16px;font-size:1.8rem;">A wardrobe without noise</h2>
+        <p class="lead">We imagine a future where fewer, better pieces replace the churn of fast fashion — where a single signature blue becomes shorthand for considered living.</p>
+      </div>
+    </div>
+  </section>
+  <section class="section wrap" style="background:var(--silver);border-radius:var(--r-lg);padding:60px 40px;">
+    <div class="section-head"><h2>Our Timeline</h2></div>
+    <div class="timeline-vert">
+      <div class="tv-item"><span class="eyebrow">2014</span><h3 style="margin:6px 0;">The Atelier Opens</h3><p class="lead">A small studio begins producing limited-run essentials by hand.</p></div>
+      <div class="tv-item"><span class="eyebrow">2018</span><h3 style="margin:6px 0;">First Flagship Boutique</h3><p class="lead">Azure Atelier opens its first physical home for the brand.</p></div>
+      <div class="tv-item"><span class="eyebrow">2022</span><h3 style="margin:6px 0;">Loyalty Program Launches</h3><p class="lead">Members begin earning points and unlocking tiered benefits.</p></div>
+      <div class="tv-item"><span class="eyebrow">2026</span><h3 style="margin:6px 0;">Online Atelier Debuts</h3><p class="lead">The full collection becomes available worldwide, online.</p></div>
+    </div>
+  </section>`;
+};
+
+/* =========================================================
+   PAGE: CONTACT
+   ========================================================= */
+renderers.contact = function(){
+  qs('#app').innerHTML = `
+  <section class="page-hero wrap"><span class="eyebrow">Get in Touch</span><h1>Contact Us</h1></section>
+  <section class="section wrap" style="padding-top:0;">
+    <div class="cart-layout">
+      <div class="card" style="padding:30px;">
+        <h3 style="margin-bottom:18px;">Send a Message</h3>
+        <div class="row-2">
+          <div class="field"><label>Name</label><input id="ct-name" placeholder="Your name"></div>
+          <div class="field"><label>Email</label><input id="ct-email" type="email" placeholder="you@email.com"></div>
+        </div>
+        <div class="field"><label>Subject</label><input id="ct-subject" placeholder="How can we help?"></div>
+        <div class="field"><label>Message</label><textarea id="ct-message" rows="5" placeholder="Write your message..."></textarea></div>
+        <button class="btn btn-primary" id="ct-send">Send Message</button>
+      </div>
+      <div>
+        <div class="card business-card" style="margin-bottom:20px;">
+          <h3 style="margin-bottom:14px;">Business Hours</h3>
+          <div class="hours-row"><span>Monday – Friday</span><span>9:00 AM – 8:00 PM</span></div>
+          <div class="hours-row"><span>Saturday</span><span>10:00 AM – 6:00 PM</span></div>
+          <div class="hours-row" style="border-bottom:none;"><span>Sunday</span><span>Closed</span></div>
+        </div>
+        <div class="card business-card" style="margin-bottom:20px;">
+          <h3 style="margin-bottom:14px;">Reach Us</h3>
+          <p class="lead">📍 12 Atelier Lane, Bukit Bintang, Kuala Lumpur</p>
+          <p class="lead">📞 +60 3-1234 5678</p>
+          <p class="lead">✉ hello@azureatelier.com</p>
+          <div class="social-row" style="margin-top:14px;">
+            <a href="#" style="color:var(--azure-ink);background:var(--silver);">📷</a>
+            <a href="#" style="color:var(--azure-ink);background:var(--silver);">📘</a>
+            <a href="#" style="color:var(--azure-ink);background:var(--silver);">𝕏</a>
+          </div>
+        </div>
+        <div class="fake-map"><span class="pin">📍</span></div>
+      </div>
+    </div>
+  </section>`;
+  qs('#ct-send').addEventListener('click', ()=>{
+    if(!qs('#ct-name').value || !qs('#ct-email').value || !qs('#ct-message').value){ toast('Please fill in all required fields'); return; }
+    toast("Message sent! We'll be in touch soon.");
+    qsa('#ct-name,#ct-email,#ct-subject,#ct-message').forEach(el=>el.value='');
+  });
+};
+
+/* =========================================================
+   PAGE: FAQ
+   ========================================================= */
+const FAQ_ITEMS = [
+  ['What is your return policy?','We accept returns within 30 days of delivery for unworn items with original tags attached. Refunds are issued to your original payment method or Azure Wallet.'],
+  ['How long does shipping take?','Standard delivery takes 3–6 business days. Express delivery, available at checkout, arrives in 1–2 business days.'],
+  ['How do I earn loyalty points?','You earn 1 point for every RM1 spent. Points accumulate automatically when you place an order while logged in to your loyalty account.'],
+  ['Can I top up my Azure Wallet?','Yes — visit the Wallet page and choose a preset amount or enter a custom value. Funds are available immediately.'],
+  ['Do you ship internationally?','We currently ship to 58 countries. Shipping fees and delivery estimates are calculated at checkout based on your address.'],
+  ['How do I track my order?','Go to Orders, select an order, and tap "Track Order" to see a live status timeline.'],
+];
+renderers.faq = function(){
+  qs('#app').innerHTML = `
+  <section class="page-hero wrap"><span class="eyebrow">Help Center</span><h1>Frequently Asked Questions</h1></section>
+  <section class="section wrap" style="padding-top:0;max-width:760px;margin:0 auto;">
+    ${FAQ_ITEMS.map((f,i)=>`
+      <div class="faq-item" data-faq="${i}">
+        <div class="faq-q">${f[0]} <span class="chev">⌄</span></div>
+        <div class="faq-a">${f[1]}</div>
+      </div>`).join('')}
+  </section>`;
+  qsa('[data-faq]').forEach(el=> el.querySelector('.faq-q').addEventListener('click', ()=> el.classList.toggle('open')));
+};
+
+/* =========================================================
+   PAGE: PRIVACY POLICY
+   ========================================================= */
+renderers.privacy = function(){
+  qs('#app').innerHTML = `
+  <section class="page-hero wrap"><span class="eyebrow">Legal</span><h1>Privacy Policy</h1></section>
+  <section class="section wrap" style="padding-top:0;">
+    <div class="legal-body">
+      <p>Azure Atelier respects your privacy. This policy explains what information we collect, how it's used, and the choices available to you.</p>
+      <h3>Information We Collect</h3>
+      <p>We store account details, order history, wishlist items, and wallet activity locally in your browser to power your shopping experience. This demo site does not transmit data to any external server.</p>
+      <h3>How We Use Your Information</h3>
+      <p>Information is used solely to operate features such as cart, checkout, loyalty points, and order tracking within this site.</p>
+      <h3>Data Storage</h3>
+      <p>All data is saved using your browser's LocalStorage and remains on your device. Clearing your browser data or using Settings → Reset will remove it permanently.</p>
+      <h3>Your Choices</h3>
+      <p>You may edit your profile at any time, or use the Reset Data option in Settings to erase all stored information.</p>
+      <h3>Contact</h3>
+      <p>Questions about this policy can be sent to privacy@azureatelier.com.</p>
+    </div>
+  </section>`;
+};
+
+/* =========================================================
+   PAGE: TERMS
+   ========================================================= */
+renderers.terms = function(){
+  qs('#app').innerHTML = `
+  <section class="page-hero wrap"><span class="eyebrow">Legal</span><h1>Terms of Service</h1></section>
+  <section class="section wrap" style="padding-top:0;">
+    <div class="legal-body">
+      <p>By using Azure Atelier, you agree to the following terms.</p>
+      <h3>1. Use of Site</h3>
+      <p>This site is a demonstration storefront. Products, pricing, and inventory are illustrative and not available for real-world purchase or shipment.</p>
+      <h3>2. Accounts &amp; Loyalty</h3>
+      <p>The loyalty program uses demo credentials for illustration purposes. Points and tiers have no monetary value outside this experience.</p>
+      <h3>3. Payments</h3>
+      <p>Wallet, card, and cash-on-delivery payment options simulate a checkout flow and do not process real financial transactions.</p>
+      <h3>4. Returns</h3>
+      <p>Return policies described on this site are illustrative of a real luxury retailer's policy and are provided for demonstration purposes.</p>
+      <h3>5. Changes</h3>
+      <p>We may update these terms periodically. Continued use of the site constitutes acceptance of the updated terms.</p>
+    </div>
+  </section>`;
+};
+
+/* =========================================================
+   INIT
+   ========================================================= */
+function init(){
+  applyTheme();
+  applyAccent();
+  updateHeaderUI();
+  render(location.pathname + location.search);
+}
+init();
+</script>
+</body>
+</html>
